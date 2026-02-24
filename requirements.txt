@@ -8,3 +8,4 @@ seaborn
 fastf1
 xgboost
 joblib
+plotly

@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
-from .data_collection import F1DataCollector
+from .data_collection import F1DataCollector, CALENDAR_2026
 from .feature_engineering import FeatureEngineer
 from .ml_models import F1PredictionModels
+
 
 class F1PredictionEngine:
     def __init__(self):
@@ -10,71 +11,140 @@ class F1PredictionEngine:
         self.feature_engineer = FeatureEngineer()
         self.ml_models = F1PredictionModels()
         self.is_trained = False
-    
-    def train_prediction_model(self):
-        """Train the prediction model with historical data"""
-        print("Collecting historical data...")
-        historical_data = self.data_collector.collect_historical_data()
-        
-        print("Engineering features...")
-        driver_features = self.feature_engineer.create_driver_features(historical_data)
-        processed_features = self.feature_engineer.engineer_features(driver_features)
-        
-        print("Training models...")
-        X, y = self.ml_models.prepare_training_data(processed_features)
+
+    # ── Training ──────────────────────────────────────────────────────────────
+
+    def quick_demo_train(self):
+        """Train on synthetic historical data — no external API needed"""
+        hist_df = self.data_collector.collect_historical_data(year_range=(2022, 2025))
+        eng_df  = self.feature_engineer.engineer_features(hist_df)
+        feat_cols = self.feature_engineer.get_feature_columns(has_grid=True)
+        feat_cols = [c for c in feat_cols if c in eng_df.columns]
+        X, y = self.ml_models.prepare_training_data(eng_df, feat_cols)
         results = self.ml_models.train_models(X, y)
-        
         self.is_trained = True
-        print("Model training completed!")
-        
         return results
-    
-    def predict_upcoming_race(self, session_key):
-        """Predict outcomes for an upcoming race"""
+
+    def train_full(self):
+        """Alias for quick_demo_train (no live API calls in 2026 pre-season)"""
+        return self.quick_demo_train()
+
+    # ── Single Race Prediction ─────────────────────────────────────────────────
+
+    def predict_race(self, circuit_name: str, include_monte_carlo: bool = True, n_sims: int = 5000):
+        """
+        Predict a race at the given circuit.
+        Returns (deterministic_df, monte_carlo_df or None)
+        """
         if not self.is_trained:
-            raise ValueError("Model must be trained first!")
-        
-        # Get current session data
-        drivers = self.data_collector.get_driver_data(session_key)
-        
-        # Create features for current drivers
-        current_features = []
-        for _, driver in drivers.iterrows():
-            # You would need to implement logic to get recent performance data
-            # This is a simplified version
-            features = {
-                'driver': driver.get('name_acronym', 'UNK'),
-                'team': driver.get('team_name', 'Unknown'),
-                'grid_position': np.random.randint(1, 21),  # Placeholder
-                'avg_lap_time': 90.0,  # Placeholder
-                'fastest_lap': 88.0,  # Placeholder
-                'consistency': 1.5,  # Placeholder
-                'recent_avg_position': 10.0,  # Placeholder
-                'recent_avg_points': 5.0,  # Placeholder
-                'season_avg_position': 10.0,  # Placeholder
-                'season_points': 50.0,  # Placeholder
-                'circuit': 'Monaco'  # You'd get this from session data
-            }
-            current_features.append(features)
-        
-        current_df = pd.DataFrame(current_features)
-        processed_current = self.feature_engineer.engineer_features(current_df)
-        
-        # Make predictions
-        predictions = self.ml_models.predict_race_outcome(processed_current)
-        
-        # Create results dataframe
-        results = pd.DataFrame({
-            'driver': current_df['driver'],
-            'team': current_df['team'],
-            'predicted_position': predictions
-        }).sort_values('predicted_position')
-        
-        return results
-    
-    def get_prediction_confidence(self, predictions):
-        """Calculate confidence intervals for predictions"""
-        # This would involve ensemble methods or uncertainty quantification
-        # Simplified version here
-        confidence = np.random.uniform(0.7, 0.95, len(predictions))
-        return confidence
+            raise ValueError("Train the model first!")
+
+        race_df  = self.data_collector.get_race_features(circuit_name)
+        eng_df   = self.feature_engineer.engineer_features(race_df)
+        feat_cols= [c for c in self.ml_models.feature_columns if c in eng_df.columns]
+
+        # Ensure columns are aligned
+        for col in self.ml_models.feature_columns:
+            if col not in eng_df.columns:
+                eng_df[col] = 0.0
+
+        determ = self.ml_models.predict_race_outcome(eng_df)
+
+        mc = None
+        if include_monte_carlo:
+            mc = self.ml_models.monte_carlo_race(eng_df, n_sims=n_sims)
+
+        return determ, mc
+
+    def generate_lap_simulation(self, race_result_df: pd.DataFrame, n_laps: int = 57):
+        """
+        Generate a plausible lap-by-lap position trace for visualization.
+        Uses predicted final order + Gaussian noise to simulate position changes.
+        """
+        np.random.seed(99)
+        drivers = race_result_df["driver_code"].tolist()
+        names   = race_result_df["driver_name"].tolist()
+        teams   = race_result_df["team"].tolist()
+        colors  = race_result_df["team_color"].tolist()
+        final_pos = race_result_df["predicted_pos"].tolist() if "predicted_pos" in race_result_df.columns else list(range(1, len(drivers) + 1))
+
+        # Start positions slightly shuffled from qualfiying (assumed ~final order)
+        start_pos = list(range(1, len(drivers) + 1))
+        np.random.shuffle(start_pos)
+
+        traces = {d: [start_pos[i]] for i, d in enumerate(drivers)}
+
+        for lap in range(1, n_laps + 1):
+            frac = lap / n_laps
+            for i, driver in enumerate(drivers):
+                target = final_pos[i]
+                current = traces[driver][-1]
+                # Drift toward target with noise
+                noise = np.random.normal(0, 1.2 * (1 - frac) + 0.3)
+                new_pos = current + (target - current) * 0.08 + noise
+                new_pos = np.clip(new_pos, 1, len(drivers))
+                traces[driver].append(round(new_pos, 2))
+
+        # Build long-form DataFrame for Plotly
+        rows = []
+        for lap in range(n_laps + 1):
+            for i, driver in enumerate(drivers):
+                rows.append({
+                    "lap": lap,
+                    "driver_code": driver,
+                    "driver_name": names[i],
+                    "team": teams[i],
+                    "team_color": colors[i],
+                    "position": traces[driver][lap],
+                })
+        return pd.DataFrame(rows)
+
+    # ── Season Simulation ──────────────────────────────────────────────────────
+
+    def predict_full_season(self):
+        """Predict all 24 races and return championship standings"""
+        if not self.is_trained:
+            raise ValueError("Train the model first!")
+
+        all_race_data = []
+        for race in CALENDAR_2026:
+            circuit = race["circuit"]
+            race_df = self.data_collector.get_race_features(circuit)
+            eng_df  = self.feature_engineer.engineer_features(race_df)
+            for col in self.ml_models.feature_columns:
+                if col not in eng_df.columns:
+                    eng_df[col] = 0.0
+            all_race_data.append((race["name"], eng_df))
+
+        return self.ml_models.predict_full_season(all_race_data)
+
+    def get_championship_snapshot(self, up_to_round: int = 24):
+        """Race-by-race cumulative points for animation"""
+        if not self.is_trained:
+            raise ValueError("Train the model first!")
+
+        POINTS   = {1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1}
+        driver_list = self.data_collector.drivers  # list of dicts
+        driver_codes = [d["code"] for d in driver_list]
+        cumul    = {code: 0 for code in driver_codes}
+        timeline = []
+
+        for race in CALENDAR_2026[:up_to_round]:
+            circuit  = race["circuit"]
+            race_df  = self.data_collector.get_race_features(circuit)
+            eng_df   = self.feature_engineer.engineer_features(race_df)
+            for col in self.ml_models.feature_columns:
+                if col not in eng_df.columns:
+                    eng_df[col] = 0.0
+            mc = self.ml_models.monte_carlo_race(eng_df, n_sims=1000)
+
+            for _, row in mc.iterrows():
+                pos = int(round(row["expected_pos"]))
+                pts = POINTS.get(pos, 0)
+                cumul[row["driver_code"]] = cumul.get(row["driver_code"], 0) + pts
+
+            snapshot = {"race": race["name"], "round": race["round"]}
+            snapshot.update(cumul.copy())
+            timeline.append(snapshot)
+
+        return pd.DataFrame(timeline)
