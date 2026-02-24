@@ -15,7 +15,7 @@ from src.data_collection import (
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="F1 2026 — Season Predictor",
-    page_icon="🏎️",
+    page_icon=":racing_car:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -23,34 +23,45 @@ st.set_page_config(
 # ─── GLOBAL CSS ───────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* Dashboard Overhaul */
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    /* ── Sidebar ─────────────────────────────────────────── */
     [data-testid="stSidebar"] {
-        background: rgba(10, 10, 15, 0.95) !important;
-        backdrop-filter: blur(25px);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 20px;
-        margin: 10px;
-        height: calc(100vh - 20px);
+        background: linear-gradient(180deg, #070710 0%, #0d0d1a 60%, #0a0a12 100%) !important;
+        border-right: 1px solid rgba(255,30,0,0.12) !important;
+        box-shadow: 4px 0 30px rgba(0,0,0,0.6) !important;
     }
-    
+    [data-testid="stSidebar"] > div:first-child { padding-top: 0 !important; }
+    [data-testid="stSidebar"] [data-testid="stRadio"] > div {
+        gap: 0.15rem !important; flex-direction: column !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] label {
+        display: flex !important; align-items: center !important;
+        padding: 0.6rem 1rem !important; border-radius: 12px !important;
+        cursor: pointer !important; transition: all 0.25s ease !important;
+        color: #888 !important; font-size: 0.88rem !important; font-weight: 500 !important;
+        border: 1px solid transparent !important; margin: 1px 0 !important; width: 100% !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
+        background: rgba(255,30,0,0.06) !important; color: #fff !important;
+        border-color: rgba(255,30,0,0.2) !important;
+    }
+    [data-testid="stSidebar"] [data-testid="stRadio"] [data-baseweb="radio"] > div:first-child { display: none !important; }
+
+    /* ── Hero banner ─────────────────────────────────────── */
     .f1-hero {
         background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 100%);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 24px;
-        padding: 3rem;
-        margin-bottom: 2rem;
-        text-align: center;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-        position: relative;
+        border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 3rem;
+        margin-bottom: 2rem; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative;
     }
     .f1-hero h1 {
         font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900;
         background: linear-gradient(90deg, #ff1e00, #ff6b00);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        margin: 0;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
     }
     .f1-hero p { color: #888; margin-top: 1rem; font-size: 1.1rem; }
 
+    /* ── Section header ──────────────────────────────────── */
     .section-header {
         font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700;
         color: #fff; border-left: 4px solid #ff1e00; border-radius: 2px;
@@ -58,85 +69,151 @@ st.markdown("""
         text-transform: uppercase; letter-spacing: 0.1em;
     }
 
+    /* ── Metric card ─────────────────────────────────────── */
     .metric-card {
-        background: rgba(25, 25, 40, 0.6);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
-        padding: 1.5rem;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        text-align: center;
+        background: rgba(25,25,40,0.6); backdrop-filter: blur(15px);
+        border: 1px solid rgba(255,255,255,0.08); border-radius: 20px;
+        padding: 1.5rem; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-align: center;
     }
-    .metric-card:hover { transform: translateY(-5px); border-color: #ff1e00; box-shadow: 0 15px 35px rgba(255, 30, 0, 0.15); }
+    .metric-card:hover { transform: translateY(-5px); border-color: #ff1e00; box-shadow: 0 15px 35px rgba(255,30,0,0.15); }
     .metric-card .val { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #ff1e00; }
     .metric-card .label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
 
+    /* ── Driver card ─────────────────────────────────────── */
     .driver-card {
-        background: rgba(30,30,45, 0.5);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 20px;
-        padding: 1.2rem; margin: 0.5rem 0;
-        transition: all 0.3s;
+        background: rgba(30,30,45,0.5); backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.06); border-radius: 20px;
+        padding: 1.2rem; margin: 0.5rem 0; transition: all 0.3s;
     }
     .driver-card:hover { border-color: rgba(255,255,255,0.15); transform: scale(1.02); }
 
-    .race-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 20px;
-        padding: 1.2rem; margin: 0.7rem 0;
-        display: flex; align-items: center; gap: 1.5rem;
-        transition: all 0.3s;
+    /* ── Race expander cards ─────────────────────────────── */
+    .stExpander {
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        border-radius: 16px !important; background: rgba(255,255,255,0.02) !important;
+        margin-bottom: 0.5rem !important; transition: all 0.25s ease !important;
+        overflow: hidden !important;
     }
-    .race-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,30,0,0.3); }
+    .stExpander:hover {
+        border-color: rgba(255,30,0,0.3) !important;
+        background: rgba(255,30,0,0.03) !important;
+        box-shadow: 0 4px 24px rgba(255,30,0,0.07) !important;
+    }
+    .stExpander summary { padding: 0.5rem 1rem !important; cursor: pointer !important; }
 
+    /* ── Race header inside expander ─────────────────────── */
+    .race-header-row { display: flex; align-items: center; gap: 1rem; width: 100%; padding: 0.4rem 0; }
+    .race-rnd {
+        background: linear-gradient(135deg, #ff1e00, #ff6b00); color: #fff;
+        font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900;
+        padding: 0.3rem 0.55rem; border-radius: 8px; letter-spacing: 0.08em;
+        min-width: 36px; text-align: center; flex-shrink: 0;
+    }
+    .race-flag { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+    .race-name-block { flex: 1; min-width: 0; }
+    .race-name-txt { font-weight: 700; color: #fff; font-size: 0.97rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .race-circuit-txt { font-size: 0.74rem; color: #555; margin-top: 2px; }
+    .race-meta-block { text-align: right; flex-shrink: 0; }
+    .race-date-txt { font-size: 0.8rem; color: #bbb; font-weight: 500; }
+    .race-type-pill {
+        display: inline-block; font-size: 0.6rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.08em;
+        padding: 0.15rem 0.55rem; border-radius: 999px; margin-top: 0.3rem;
+        border: 1px solid currentColor; opacity: 0.9;
+    }
+    .sprint-badge {
+        display: inline-block; background: linear-gradient(90deg,#9b30ff,#6600cc);
+        color: #fff; font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em;
+        padding: 0.15rem 0.45rem; border-radius: 5px; margin-left: 0.4rem;
+        vertical-align: middle; text-transform: uppercase;
+    }
+    .race-sprint-badge {
+        display:inline-block;background:linear-gradient(90deg,#9b30ff,#6600cc);
+        color:#fff;font-size:0.55rem;font-weight:800;letter-spacing:0.1em;
+        padding:0.15rem 0.45rem;border-radius:5px;margin-left:0.4rem;
+        vertical-align:middle;text-transform:uppercase;
+    }
+
+    /* ── Track detail panel ──────────────────────────────── */
+    .track-stat-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem;
+    }
+    .track-stat {
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 10px; padding: 0.6rem 0.8rem;
+    }
+    .track-stat-label { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
+    .track-stat-value { font-size: 0.88rem; color: #ddd; font-weight: 600; margin-top: 0.15rem; }
+
+    /* ── Sidebar stat card ───────────────────────────────── */
+    .sb-card {
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 14px; padding: 0.85rem 1rem; margin: 0.3rem 0;
+    }
+    .sb-card-label { font-size: 0.58rem; color: #444; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
+    .sb-card-value { font-family: 'Orbitron'; font-size: 1rem; font-weight: 900; color: #fff; }
+    .sb-card-sub { font-size: 0.68rem; color: #555; margin-top: 0.15rem; }
+
+    /* ── Podium ──────────────────────────────────────────── */
     .podium-p1 { background: rgba(255,215,0,0.05); border: 2px solid #FFD700; border-radius: 24px; padding: 2rem; text-align: center; }
     .podium-p2 { background: rgba(192,192,192,0.05); border: 1px solid #C0C0C0; border-radius: 20px; padding: 1.5rem; text-align: center; margin-top: 1rem; }
     .podium-p3 { background: rgba(205,127,50,0.03); border: 1px solid #CD7F32; border-radius: 20px; padding: 1.5rem; text-align: center; margin-top: 2rem; }
 
-    .reg-card {
-        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 20px; padding: 1.5rem; height: 100%; transition: all 0.3s;
-    }
+    /* ── Reg / countdown / misc ──────────────────────────── */
+    .reg-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 1.5rem; height: 100%; transition: all 0.3s; }
     .reg-card:hover { background: rgba(255,255,255,0.06); }
-
-    .countdown-box {
-        background: rgba(255,30,0,0.03); border: 1px solid #ff1e0033;
-        border-radius: 24px; padding: 2rem; text-align: center;
-    }
-    .countdown-num { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; color: #fff; filter: drop-shadow(0 0 15px rgba(255,30,0,0.4)); }
-
+    .countdown-box { background: rgba(255,30,0,0.03); border: 1px solid #ff1e0033; border-radius: 24px; padding: 2rem; text-align: center; }
+    .countdown-num { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; color: #fff; filter: drop_shadow(0 0 15px rgba(255,30,0,0.4)); }
+    .countdown-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 0.2em; margin-left: 0.4rem; vertical-align: super; }
     .stDataFrame { border-radius: 20px !important; }
     .stButton>button { border-radius: 12px !important; transition: all 0.3s; font-family: 'Orbitron'; }
-    
-    /* Remove Emojis from select labels etc */
     .stSelectbox label, .stMultiSelect label { font-family: 'Inter'; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem !important; color: #555 !important; }
-</style>
-
 </style>
 """, unsafe_allow_html=True)
 
 # ─── ICONS ───────────────────────────────────────────────────────────────────
-def get_icon(name: str, size: int = 24, color: str = "currentColor") -> str:
+def get_icon(name: str, size: int = 24, color: str = "currentColor", margin_right: int = 10) -> str:
     """Helper to return SVG icons as HTML string."""
     icons = {
-        "home": '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
-        "calendar": '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>',
-        "predictor": '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
-        "trophy": '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>',
-        "user": '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
-        "analytics": '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
-        "sparkles": '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="m5 3 1 1"></path><path d="m19 3-1 1"></path><path d="m5 21 1-1"></path><path d="m19 21-1-1"></path>',
-        "check": '<polyline points="20 6 9 17 4 12"></polyline>',
-        "zap": '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>',
-        "activity": '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
-        "award": '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
-        "shield": '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
-        "trending-up": '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>'
+        "home":        '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline>',
+        "calendar":    '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line>',
+        "predictor":   '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
+        "trophy":      '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>',
+        "user":        '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
+        "users":       '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 1-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>',
+        "analytics":   '<line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line>',
+        "sparkles":    '<path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path>',
+        "check":       '<polyline points="20 6 9 17 4 12"></polyline>',
+        "zap":         '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>',
+        "activity":    '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>',
+        "award":       '<circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>',
+        "shield":      '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>',
+        "trending-up": '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline>',
+        "map-pin":     '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>',
+        "cpu":         '<rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line>',
+        "clock":       '<circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline>',
+        "layers":      '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+        "settings":    '<circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>',
+        "building":    '<rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline><line x1="12" y1="22" x2="12" y2="11"></line><path d="M7 11h2v2H7zM15 11h2v2H15zM7 15h2v2H7zM15 15h2v2H15z"></path>',
+        "flag":        '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line>',
+        "grid":        '<rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect>',
+        "star":        '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>',
+        "list":        '<line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line>',
+        "refresh":     '<polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>',
+        "bar-chart":   '<line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line>',
+        "compass":     '<circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>',
+        "race-flag":   '<rect x="2" y="2" width="5" height="5" fill="currentColor" rx="0.5"></rect><rect x="9" y="2" width="5" height="5" fill="none" stroke="currentColor"></rect><rect x="2" y="9" width="5" height="5" fill="none" stroke="currentColor"></rect><rect x="9" y="9" width="5" height="5" fill="currentColor" rx="0.5"></rect><line x1="2" y1="22" x2="2" y2="2"></line>',
     }
     path = icons.get(name, "")
-    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 10px;">{path}</svg>'
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:{margin_right}px;flex-shrink:0">{path}</svg>'
+
+def flag_pill(iso: str, color: str = "#555") -> str:
+    """Return a small styled ISO country-code badge for use in HTML."""
+    return (f"<span style='display:inline-flex;align-items:center;justify-content:center;"
+            f"background:rgba(255,255,255,0.07);color:{color};font-size:0.58rem;"
+            f"font-weight:700;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.15);"
+            f"border-radius:4px;padding:0.15rem 0.4rem;font-family:monospace;"
+            f"min-width:1.8rem;text-align:center'>{iso}</span>")
 
 # ─── CONSTANTS ────────────────────────────────────────────────────────────────
 OPENING_RACE_DATE = date(2026, 3, 8)   # Australian GP
@@ -145,17 +222,14 @@ F1_LOGO_URL = "https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/F1.svg/
 
 TEAM_COLORS_HEX = TEAM_COLORS
 
-FLAG_EMOJI = {
-    "NED": "Netherlands","FRA": "France","GBR": "UK","ITA": "Italy","AUS": "Australia","ESP": "Spain",
-    "GER": "Germany","BRA": "Brazil","MEX": "Mexico","FIN": "Finland","MON": "Monaco","CAN": "Canada",
-    "NZL": "New Zealand","THA": "Thailand","ARG": "Argentina",
-}
-
-CIRCUIT_FLAG = {
-    "AU":"Australia","CN":"China","JP":"Japan","BH":"Bahrain","SA":"Saudi Arabia","US":"USA",
-    "CA":"Canada","MC":"Monaco","ES":"Spain","AT":"Austria","GB":"UK","BE":"Belgium",
-    "HU":"Hungary","NL":"Netherlands","IT":"Italy","AZ":"Azerbaijan","SG":"Singapore","MX":"Mexico",
-    "BR":"Brazil","QA":"Qatar","AE":"UAE",
+# ISO-2 → country name lookup (used for display in predictor page)
+COUNTRY_NAMES = {
+    "AU": "Australia", "CN": "China",    "JP": "Japan",        "BH": "Bahrain",
+    "SA": "Saudi Arabia", "US": "USA",   "IT": "Italy",        "MC": "Monaco",
+    "ES": "Spain",    "CA": "Canada",    "AT": "Austria",       "GB": "UK",
+    "HU": "Hungary",  "BE": "Belgium",   "NL": "Netherlands",   "AZ": "Azerbaijan",
+    "SG": "Singapore","MX": "Mexico",   "BR": "Brazil",        "QA": "Qatar",
+    "AE": "UAE",
 }
 
 # ─── ENGINE ───────────────────────────────────────────────────────────────────
@@ -204,11 +278,283 @@ DRIVER_HEADSHOTS = {
 }
 
 CIRCUIT_TYPE_ICON = {
-    "street":    ("🏙️", "#ff6b00"),
-    "technical": ("⚙️", "#27F4D2"),
-    "power":     ("⚡", "#FFD700"),
-    "high_speed":("💨", "#ff1e00"),
+    "street":    ("map-pin",  "#ff6b00"),
+    "technical": ("settings", "#27F4D2"),
+    "power":     ("zap",      "#FFD700"),
+    "high_speed":("activity", "#ff1e00"),
 }
+
+# ─── CIRCUIT DETAILS ──────────────────────────────────────────────────────────
+CIRCUIT_DETAILS = {
+    "Albert Park":  {"length": 5.278, "lap_record": "1:20.235 (Leclerc, 2022)", "drs_zones": 3, "first_gp": 1996, "key_corner": "Turn 9-10 chicane", "characteristic": "Semi-street, fast flowing layout through Melbourne park"},
+    "Shanghai":     {"length": 5.451, "lap_record": "1:32.238 (M.Schumacher, 2004)", "drs_zones": 2, "first_gp": 2004, "key_corner": "Turn 1-2 hairpin", "characteristic": "Long back straight, demanding hairpin complex"},
+    "Suzuka":       {"length": 5.807, "lap_record": "1:30.983 (Hamilton, 2019)",   "drs_zones": 2, "first_gp": 1987, "key_corner": "130R / Casio chicane", "characteristic": "Figure-8 layout, high-speed esses, classic drivers' circuit"},
+    "Bahrain":      {"length": 5.412, "lap_record": "1:31.447 (De la Rosa, 2005)", "drs_zones": 3, "first_gp": 2004, "key_corner": "Turn 4 hairpin",      "characteristic": "Power unit circuit, desert surface, lots of tyre degradation"},
+    "Jeddah":       {"length": 6.174, "lap_record": "1:30.734 (Hamilton, 2021)",   "drs_zones": 3, "first_gp": 2021, "key_corner": "Turns 22-27 complex",  "characteristic": "Fastest street circuit, walls everywhere, no margin for error"},
+    "Miami":        {"length": 5.412, "lap_record": "1:29.708 (Verstappen, 2023)", "drs_zones": 3, "first_gp": 2022, "key_corner": "Turn 17 tight hairpin", "characteristic": "Contemporary street circuit, high-energy atmosphere"},
+    "Imola":        {"length": 4.909, "lap_record": "1:15.484 (Verstappen, 2022)", "drs_zones": 2, "first_gp": 1980, "key_corner": "Acque Minerali",       "characteristic": "Historic track, narrow, limited overtaking"},
+    "Monaco":        {"length": 3.337, "lap_record": "1:12.909 (Leclerc, 2021)",   "drs_zones": 1, "first_gp": 1950, "key_corner": "Grand Hotel hairpin",   "characteristic": "Tightest circuit in F1, qualifying defines the race"},
+    "Barcelona":    {"length": 4.657, "lap_record": "1:18.149 (Verstappen, 2022)", "drs_zones": 2, "first_gp": 1991, "key_corner": "Turn 3 (Renault)",     "characteristic": "Balanced layout, tyre management critical"},
+    "Montreal":     {"length": 4.361, "lap_record": "1:13.078 (Bottas, 2019)",     "drs_zones": 2, "first_gp": 1978, "key_corner": "Wall of Champions chicane","characteristic": "Power circuit, low downforce, high safety car risk"},
+    "Red Bull Ring":{"length": 4.318, "lap_record": "1:05.619 (Leclerc, 2020)",   "drs_zones": 3, "first_gp": 1970, "key_corner": "Turn 3 ascent",         "characteristic": "Short lap, lots of elevation change, clean air crucial"},
+    "Silverstone":  {"length": 5.891, "lap_record": "1:27.097 (Hamilton, 2020)",   "drs_zones": 2, "first_gp": 1950, "key_corner": "Maggots-Becketts-Chapel","characteristic": "Home of British motorsport, ultra-fast flowing corners"},
+    "Hungaroring":  {"length": 4.381, "lap_record": "1:16.627 (Hamilton, 2020)",   "drs_zones": 2, "first_gp": 1986, "key_corner": "Turn 4 (fast left)",   "characteristic": "Monaco without walls — tight, technical, limited DRS effect"},
+    "Spa":          {"length": 7.004, "lap_record": "1:46.286 (Bottas, 2018)",     "drs_zones": 2, "first_gp": 1950, "key_corner": "Eau Rouge / Raidillon", "characteristic": "Greatest circuit in the world, unpredictable weather"},
+    "Zandvoort":    {"length": 4.259, "lap_record": "1:11.097 (Verstappen, 2021)", "drs_zones": 2, "first_gp": 1952, "key_corner": "Tarzanbocht hairpin",  "characteristic": "Banked corners, tight, designed for close racing"},
+    "Monza":         {"length": 5.793, "lap_record": "1:21.046 (Barrichello, 2004)","drs_zones": 2, "first_gp": 1950, "key_corner": "Parabolica / Variante Ascari","characteristic": "Temple of speed, lowest downforce circuit"},
+    "Baku":          {"length": 6.003, "lap_record": "1:43.009 (Leclerc, 2019)",   "drs_zones": 2, "first_gp": 2016, "key_corner": "Turn 8 (castle hairpin)","characteristic": "Long straight, street circuit, chaotic safety cars"},
+    "Singapore":     {"length": 4.940, "lap_record": "1:35.867 (Santos, 2023)",     "drs_zones": 3, "first_gp": 2008, "key_corner": "Turn 5 (Raffles Blvd)", "characteristic": "Night race, hottest/most humid circuit, most corners"},
+    "Austin":        {"length": 5.513, "lap_record": "1:36.169 (Leclerc, 2019)",   "drs_zones": 2, "first_gp": 2012, "key_corner": "Turn 1 (blind crest)",  "characteristic": "Technical Hermann Tilke design, challenging elevation change"},
+    "Mexico City":   {"length": 4.304, "lap_record": "1:17.774 (Bottas, 2021)",    "drs_zones": 3, "first_gp": 1963, "key_corner": "Estadio section",        "characteristic": "Highest altitude circuit (2285m), massive straight, low aero"},
+    "Interlagos":    {"length": 4.309, "lap_record": "1:10.540 (Rubens, 2004)",    "drs_zones": 2, "first_gp": 1973, "key_corner": "Senna S",                "characteristic": "Anti-clockwise, undulating, unpredictable weather"},
+    "Las Vegas":     {"length": 6.201, "lap_record": "1:35.490 (Leclerc, 2023)",   "drs_zones": 3, "first_gp": 2023, "key_corner": "Turn 14 hairpin (Apex)", "characteristic": "Strip circuit, nighttime glamour, fast straights"},
+    "Lusail":       {"length": 5.380, "lap_record": "1:24.319 (Verstappen, 2023)", "drs_zones": 2, "first_gp": 2021, "key_corner": "Turn 1 braking zone",   "characteristic": "High-speed flowing layout, massive tyre degradation"},
+    "Yas Marina":   {"length": 5.281, "lap_record": "1:26.103 (Verstappen, 2021)", "drs_zones": 2, "first_gp": 2009, "key_corner": "Turn 6 (marina section)","characteristic": "Season finale, mixed day/night race, Abu Dhabi"},
+}
+
+
+# ─── CIRCUIT GPS COORDINATES ─────────────────────────────────────────────────
+# (lat, lon, osm_zoom) — used for embedded OpenStreetMap thumbnails
+CIRCUIT_COORDS = {
+    "Albert Park":  (-37.8497,  144.9680, 14),
+    "Shanghai":     ( 31.3389,  121.2197, 14),
+    "Suzuka":       ( 34.8431,  136.5400, 14),
+    "Bahrain":      ( 26.0325,   50.5106, 14),
+    "Jeddah":       ( 21.6319,   39.1044, 14),
+    "Miami":        ( 25.9581,  -80.2389, 14),
+    "Imola":        ( 44.3439,   11.7167, 14),
+    "Monaco":       ( 43.7347,    7.4206, 15),
+    "Barcelona":    ( 41.5700,    2.2611, 14),
+    "Montreal":     ( 45.5000,  -73.5228, 14),
+    "Red Bull Ring":( 47.2197,   14.7647, 14),
+    "Silverstone":  ( 52.0786,   -1.0169, 14),
+    "Hungaroring":  ( 47.5830,   19.2511, 14),
+    "Spa":          ( 50.4372,    5.9714, 13),
+    "Zandvoort":    ( 52.3888,    4.5409, 14),
+    "Monza":        ( 45.6156,    9.2811, 14),
+    "Baku":         ( 40.3725,   49.8533, 14),
+    "Singapore":    (  1.2914,  103.8644, 15),
+    "Austin":       ( 30.1328,  -97.6411, 14),
+    "Mexico City":  ( 19.4042,  -99.0907, 14),
+    "Interlagos":   (-23.7036,  -46.6997, 14),
+    "Las Vegas":    ( 36.1147, -115.1728, 14),
+    "Lusail":       ( 25.4900,   51.4542, 14),
+    "Yas Marina":   ( 24.4672,   54.6031, 14),
+}
+
+def get_map_embed(circuit_name: str, height: int = 185) -> str:
+    """Return an OpenStreetMap iframe centred on the circuit. No API key needed."""
+    coords = CIRCUIT_COORDS.get(circuit_name)
+    if not coords:
+        return ""
+    lat, lon, zoom = coords
+    delta = 0.013 * (2 ** (14 - zoom))
+    bbox = f"{lon - delta},{lat - delta},{lon + delta},{lat + delta}"
+    src = (
+        f"https://www.openstreetmap.org/export/embed.html"
+        f"?bbox={bbox}&layer=mapnik&marker={lat},{lon}"
+    )
+    return (
+        f"<div style='border-radius:12px;overflow:hidden;"
+        f"border:1px solid rgba(255,255,255,0.10);"
+        f"box-shadow:0 6px 20px rgba(0,0,0,0.55);position:relative'>"
+        f"<iframe src='{src}' width='100%' height='{height}px' "
+        f"style='border:none;display:block;"
+        f"filter:brightness(0.88) saturate(0.78) contrast(1.08)' "
+        f"loading='lazy' title='{circuit_name} map'></iframe>"
+        f"<div style='position:absolute;bottom:4px;right:6px;font-size:0.46rem;"
+        f"color:#999;background:rgba(0,0,0,0.6);padding:1px 5px;border-radius:3px;"
+        f"pointer-events:none'>© OpenStreetMap</div></div>"
+    )
+
+# ─── RACE WEEKEND SCHEDULE TEMPLATES ─────────────────────────────────────────
+_NORMAL_WKD = [
+    ("FRI", "Practice 1",          "#4a4a5a"),
+    ("FRI", "Practice 2",          "#4a4a5a"),
+    ("SAT", "Practice 3",          "#4a4a5a"),
+    ("SAT", "Qualifying",          "#ff6b00"),
+    ("SUN", "Race  🏁",    "#ff1e00"),
+]
+_SPRINT_WKD = [
+    ("FRI", "Practice 1",               "#4a4a5a"),
+    ("FRI", "Sprint Qualifying",         "#9b30ff"),
+    ("SAT", "Sprint Race  🚀",   "#9b30ff"),
+    ("SAT", "Qualifying",               "#ff6b00"),
+    ("SUN", "Race  🏁",         "#ff1e00"),
+]
+
+# --- TRACK SVG MAPS -------------------------------------------------------------------
+# Accurate circuit fingerprint SVGs -- each shaped like its real-world layout
+def get_track_svg(circuit_name: str, color: str = "#ff1e00") -> str:
+    paths = {
+        # Albert Park -- park circuit, square outer loop with inner chicane section
+        "Albert Park":
+            "M42,25 L150,25 Q164,25 164,42 L164,86 L140,86 Q128,86 128,100 "
+            "L128,116 Q128,130 114,132 L74,132 Q60,132 60,118 L60,100 "
+            "Q60,86 48,86 L28,86 L28,42 Q28,25 42,25 Z",
+        # Shanghai -- reverse-C outer loop, long back straight, hairpin
+        "Shanghai":
+            "M30,158 L30,30 Q30,14 52,14 L150,14 Q168,14 168,38 "
+            "L168,92 Q168,108 150,110 L96,110 L96,150 "
+            "Q96,164 78,166 L50,166 Q30,165 30,158 Z",
+        # Suzuka -- iconic figure-8 (crossing at Degner curve)
+        "Suzuka":
+            "M95,12 Q124,12 140,33 L150,59 Q156,80 143,97 L122,110 "
+            "Q108,118 95,116 Q82,118 68,110 L47,97 Q34,80 40,59 "
+            "L50,33 Q66,12 95,12 Z "
+            "M95,116 L95,144 Q95,157 105,162 L120,157 "
+            "Q126,149 124,137 L120,116",
+        # Bahrain -- rounded rectangular with three hairpin interruptions
+        "Bahrain":
+            "M38,28 Q38,11 63,11 L130,11 Q157,11 157,38 "
+            "L157,145 Q157,168 130,168 L63,168 "
+            "Q38,168 38,145 L38,96 L62,96 L62,80 L38,80 Z",
+        # Jeddah -- very long thin fast street circuit
+        "Jeddah":
+            "M34,170 L34,27 Q34,11 52,11 L80,11 Q97,11 99,28 "
+            "L99,66 Q99,81 88,85 L67,89 Q57,93 59,104 "
+            "L68,122 Q79,140 102,142 L142,138 Q162,132 163,116 "
+            "L163,170 Q161,180 145,180 L49,180 Q34,178 34,170 Z",
+        # Miami -- modern loop around Hard Rock Stadium
+        "Miami":
+            "M28,64 L28,28 Q28,11 48,11 L150,11 Q167,11 167,32 "
+            "L167,80 L138,98 L138,134 Q138,157 117,160 "
+            "L57,160 Q28,158 28,135 Z",
+        # Imola -- narrow classic with Acque Minerali chicane
+        "Imola":
+            "M78,17 Q113,9 134,36 L144,70 Q150,94 137,118 "
+            "L114,140 Q87,157 64,142 L42,113 Q30,87 41,61 "
+            "L54,35 Q66,17 78,17 Z "
+            "M88,150 L88,170 Q88,178 99,178 L110,174 "
+            "Q117,165 114,154 L110,146",
+        # Monaco -- famously tight hillside street circuit
+        "Monaco":
+            "M88,14 Q121,10 140,33 L149,57 Q151,77 139,88 "
+            "L115,98 Q91,106 67,97 L49,79 Q41,60 48,40 "
+            "Q60,14 88,14 Z",
+        # Barcelona -- balanced layout, long back straight
+        "Barcelona":
+            "M30,74 L30,27 Q30,11 55,11 L150,11 Q170,11 170,38 "
+            "L170,80 L140,98 L140,140 Q140,162 115,164 "
+            "L57,164 Q30,162 30,140 Z",
+        # Montreal -- Gilles Villeneuve island hairpin circuit
+        "Montreal":
+            "M30,164 L30,24 Q30,9 52,9 L87,9 Q104,9 104,30 "
+            "L104,84 L150,84 Q168,84 168,104 L168,147 "
+            "Q168,167 147,170 L49,170 Q30,167 30,164 Z",
+        # Red Bull Ring -- short hilly Austrian circuit
+        "Red Bull Ring":
+            "M57,154 L28,80 Q22,49 53,28 L93,15 Q128,7 152,36 "
+            "L164,75 L136,130 Q118,164 92,166 Q72,166 57,154 Z",
+        # Silverstone -- ultra-fast British wing shape
+        "Silverstone":
+            "M28,59 L28,27 Q28,10 60,10 L152,10 Q176,10 178,38 "
+            "L178,84 Q178,112 152,118 L118,122 L118,150 "
+            "Q118,166 97,169 L54,169 Q28,166 28,142 Z",
+        # Hungaroring -- twisty stadium-style circuit
+        "Hungaroring":
+            "M54,154 L36,88 Q28,55 54,35 L93,17 Q128,7 155,34 "
+            "L164,72 Q172,105 152,130 L119,150 "
+            "Q90,166 54,154 Z",
+        # Spa-Francorchamps -- triangular layout: Raidillon, Kemmel, Bus Stop
+        "Spa":
+            "M28,84 L28,27 Q28,11 54,11 L82,11 L82,46 "
+            "Q82,61 108,68 L150,72 Q172,75 172,102 "
+            "L172,147 Q172,170 146,170 L91,170 "
+            "Q67,170 62,147 L58,119 Q53,100 33,99 Z",
+        # Zandvoort -- banked Tarzanbocht hairpin circuit
+        "Zandvoort":
+            "M82,11 Q120,7 137,30 Q152,53 148,82 "
+            "L137,114 Q121,140 95,150 L61,150 "
+            "Q34,142 24,114 L22,82 Q26,35 82,11 Z",
+        # Monza -- Temple of Speed: oval with two chicane breaks
+        "Monza":
+            "M28,84 L28,27 Q28,9 56,9 L140,9 Q164,9 164,29 "
+            "L164,84 Q164,138 140,150 L120,154 L120,114 "
+            "L52,114 L52,154 L33,150 Q28,138 28,84 Z",
+        # Baku -- Corniche straight + winding castle section
+        "Baku":
+            "M28,167 L28,24 Q28,9 50,9 L76,9 Q94,9 97,30 "
+            "L97,90 Q97,105 114,108 L154,108 "
+            "Q170,108 170,128 L170,167 "
+            "Q168,180 150,180 L46,180 Q28,178 28,167 Z",
+        # Singapore -- dense night circuit, 90-degree corners
+        "Singapore":
+            "M28,82 L28,34 Q28,14 55,14 L83,14 L83,58 "
+            "L120,58 L120,14 L150,14 Q167,14 169,42 "
+            "L169,94 Q169,120 144,124 L102,127 "
+            "L102,164 Q100,178 82,180 L49,180 "
+            "Q28,177 28,150 Z",
+        # Austin (COTA) -- blind-crest T1, esses, stadium section
+        "Austin":
+            "M54,157 L31,82 Q24,46 54,26 L97,13 "
+            "Q134,5 157,35 L166,78 L138,105 "
+            "L138,142 Q138,164 112,167 "
+            "L78,170 Q54,167 54,157 Z",
+        # Mexico City -- highest altitude, massive straight
+        "Mexico City":
+            "M30,86 L30,29 Q30,11 60,11 L140,11 "
+            "Q164,11 164,36 L164,90 L150,114 "
+            "Q150,138 138,140 L62,140 "
+            "Q30,134 30,102 Z",
+        # Interlagos -- anti-clockwise, Senna S first corner
+        "Interlagos":
+            "M75,17 Q112,9 138,36 L151,70 Q160,98 143,120 "
+            "L111,138 Q84,150 57,134 L35,103 "
+            "Q24,76 38,49 Q54,24 75,17 Z",
+        # Las Vegas -- Strip circuit: two mega straights + inner hairpin link
+        "Las Vegas":
+            "M28,40 L28,17 Q28,7 50,7 L160,7 "
+            "Q178,7 178,24 L178,164 "
+            "Q178,180 160,180 L50,180 "
+            "Q28,177 28,157 L28,124 "
+            "L93,124 L93,76 L28,76 Z",
+        # Lusail -- high-speed flowing Qatari circuit
+        "Lusail":
+            "M84,17 Q122,9 148,36 L162,73 "
+            "Q170,104 151,130 L118,148 "
+            "Q88,160 61,140 L39,109 "
+            "Q27,79 40,52 Q56,23 84,17 Z",
+        # Yas Marina -- Abu Dhabi season finale
+        "Yas Marina":
+            "M28,62 L28,23 Q28,9 55,9 L140,9 "
+            "Q168,9 170,36 L170,84 "
+            "Q170,115 144,120 L102,124 "
+            "L102,150 Q102,165 82,168 "
+            "L49,168 Q28,165 28,146 Z",
+    }
+
+    cid = circuit_name.replace(" ", "").replace(".", "")
+    path = paths.get(circuit_name, "M45,45 L160,45 L160,155 L45,155 Z")
+    return f"""
+    <svg viewBox="0 0 200 195" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;max-width:340px;filter:drop-shadow(0 0 16px {color}44)">
+        <defs>
+            <filter id="glo{cid}" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="tg{cid}" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:{color};stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:{color}88;stop-opacity:1"/>
+            </linearGradient>
+        </defs>
+        <rect width="200" height="195" fill="#06060e" rx="14"/>
+        <path d="{path}" fill="none" stroke="{color}12" stroke-width="16"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="{path}" fill="none" stroke="{color}28" stroke-width="10"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="{path}" fill="none" stroke="#111122" stroke-width="5.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="{path}" fill="none" stroke="url(#tg{cid})" stroke-width="2.8"
+              stroke-linecap="round" stroke-linejoin="round"
+              filter="url(#glo{cid})" opacity="0.95"/>
+        <rect x="34" y="18" width="14" height="5" rx="2" fill="{color}" opacity="0.9"/>
+        <text x="52" y="24" font-size="6.5" fill="{color}" font-family="monospace"
+              font-weight="bold" letter-spacing="0.5" opacity="0.75">S/F</text>
+    </svg>"""
+
+
 
 # ─── FOOTER ──────────────────────────────────────────────────────────────────
 def show_footer():
@@ -229,71 +575,162 @@ def show_footer():
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 def render_sidebar(engine):
     with st.sidebar:
-        # F1 Logo
+        # ── Header ──────────────────────────────────────────────────────────
         st.markdown(f"""
-        <div style='text-align:center; padding: 1.5rem 0 1rem 0'>
-            <img src='{F1_LOGO_URL}' style='width:140px; filter: drop-shadow(0 0 15px rgba(255,30,0,0.3))'>
-            <div style='font-size:0.65rem; color:#ff1e00; letter-spacing:0.3em; text-transform:uppercase; margin-top:0.8rem; font-weight:700'>
-                Intelligence Hub
-            </div>
+        <div style='background:linear-gradient(180deg,rgba(255,30,0,0.10),transparent);
+                    padding:1.6rem 1rem 1rem 1rem; margin:-1rem -1rem 0 -1rem;
+                    border-bottom:1px solid rgba(255,255,255,0.05); text-align:center'>
+            <img src='{F1_LOGO_URL}'
+                 style='width:100px; filter:drop-shadow(0 0 18px rgba(255,30,0,0.5)) brightness(1.1)'>
+            <div style='margin-top:0.6rem; font-family:"Orbitron",monospace; font-size:0.5rem;
+                        font-weight:700; letter-spacing:0.35em; color:#ff1e00;
+                        text-transform:uppercase'>2026 Intelligence Hub</div>
         </div>
         """, unsafe_allow_html=True)
-        
-        st.markdown("<div style='margin-bottom: 1.5rem'></div>", unsafe_allow_html=True)
-        
-        # Navigation
-        st.markdown(f"<div style='font-size:0.7rem; color:#555; margin-bottom:0.5rem; text-transform:uppercase; letter-spacing:0.1em; padding-left:10px'>System Menu</div>", unsafe_allow_html=True)
-        
-        nav_options = {
-            "Home": "home",
-            "2026 Calendar": "calendar",
-            "Race Predictor": "predictor",
-            "Season Simulator": "trophy",
-            "Driver Profiles": "user",
-            "Analytics": "analytics"
-        }
-        
-        # Use a hidden radio but custom-looking links
-        page_choice = st.radio(
-            "Navigate", 
-            list(nav_options.keys()),
-            label_visibility="collapsed"
+
+        st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
+
+        # ── Navigation label ─────────────────────────────────────────────────
+        st.markdown("""
+        <div style='font-size:0.55rem; color:#2a2a3a; text-transform:uppercase;
+                    letter-spacing:0.18em; padding:0 0.2rem 0.35rem 0.2rem; font-weight:700'>
+            Navigation
+        </div>""", unsafe_allow_html=True)
+
+        # Nav items: (label, icon_name)
+        NAV_ITEMS = [
+            ("Home",             "home"),
+            ("2026 Calendar",    "calendar"),
+            ("Race Predictor",   "activity"),
+            ("Season Simulator", "trophy"),
+            ("Driver Profiles",  "user"),
+            ("Analytics",        "bar-chart"),
+        ]
+        nav_labels = [k for k, _ in NAV_ITEMS]
+
+        page_idx = st.radio(
+            "nav", nav_labels, label_visibility="collapsed", index=0
         )
-        
-        st.markdown("<div style='margin: 1.5rem 0; border-top: 1px solid rgba(255,255,255,0.05)'></div>", unsafe_allow_html=True)
-        
-        # Season countdown
-        st.markdown("<div style='font-size:0.7rem; color:#555; text-align:center; letter-spacing:0.1em; text-transform:uppercase'>2026 Neutral Split</div>", unsafe_allow_html=True)
+        page_choice = page_idx   # already the plain key
+
+        # ── Divider ──────────────────────────────────────────────────────────
+        st.markdown("""
+        <div style='margin:0.8rem 0; border-top:1px solid rgba(255,255,255,0.05)'></div>
+        """, unsafe_allow_html=True)
+
+        # ── Countdown card ───────────────────────────────────────────────────
         days_left = (OPENING_RACE_DATE - date.today()).days
         if days_left > 0:
-            st.markdown(
-                f"<div style='text-align:center; font-family:Orbitron; font-size:2rem; font-weight:900; "
-                f"color:#ff1e00; text-shadow:0 0 20px rgba(255,30,0,0.4)'>{days_left}</div>"
-                f"<div style='text-align:center; font-size:0.6rem; color:#555; letter-spacing:0.15em'>DAYS TO MELBOURNE</div>",
-                unsafe_allow_html=True)
+            weeks, rem_days = divmod(days_left, 7)
+            st.markdown(f"""
+            <div class='sb-card'>
+                <div class='sb-card-label'>{get_icon('clock', 12, '#444', 4)} Season Countdown</div>
+                <div style='display:flex;align-items:baseline;gap:0.5rem;margin-top:0.3rem'>
+                    <span style='font-family:Orbitron;font-size:2rem;font-weight:900;
+                                 color:#ff1e00;text-shadow:0 0 20px rgba(255,30,0,0.4)'>
+                        {days_left}
+                    </span>
+                    <span style='font-size:0.6rem;color:#444;letter-spacing:0.1em'>DAYS</span>
+                </div>
+                <div class='sb-card-sub'>TO MELBOURNE · MARCH 8</div>
+            </div>
+            """, unsafe_allow_html=True)
         else:
-            st.markdown("<div style='text-align:center; color:#00ff88; font-weight:700; font-family:Orbitron; font-size:0.85rem'>LIVE ROUND ACTIVE</div>", unsafe_allow_html=True)
-        
-        st.markdown("<div style='margin: 1.5rem 0; border-top: 1px solid rgba(255,255,255,0.05)'></div>", unsafe_allow_html=True)
-        
-        # Model status
-        st.markdown("<div style='font-size:0.7rem; color:#555; text-align:center; letter-spacing:0.1em; text-transform:uppercase'>ML Engine Status</div>", unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class='sb-card' style='border-color:rgba(0,255,136,0.3)'>
+                <div class='sb-card-label'>{get_icon('race-flag', 12, '#00ff88', 4)} Season Status</div>
+                <div style='color:#00ff88;font-family:Orbitron;font-size:0.8rem;font-weight:700;margin-top:0.3rem'>
+                    LIVE SEASON ACTIVE
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ── Next race mini-card ───────────────────────────────────────────────
+        today_ts = pd.Timestamp(date.today())
+        upcoming = [r for r in CALENDAR_2026 if pd.Timestamp(r["date"]) >= today_ts]
+        if upcoming:
+            nr = upcoming[0]
+            ct_color_map = {"power":"#ff6b00","high_speed":"#ff1e00","street":"#FF87BC","technical":"#27F4D2","balanced":"#aaa"}
+            nr_color = ct_color_map.get(nr["circuit_type"], "#888")
+            sprint_txt = " · <span style='color:#9b30ff;font-weight:700'>SPRINT</span>" if nr["sprint"] else ""
+            fp = flag_pill(nr["flag"], "#888")
+            st.markdown(f"""
+            <div class='sb-card' style='border-color:rgba(255,255,255,0.07)'>
+                <div class='sb-card-label'>{get_icon('compass', 12, '#444', 4)} Next Round · R{nr["round"]}</div>
+                <div style='display:flex;align-items:center;gap:0.4rem;margin-top:0.3rem'>
+                    {fp}
+                    <span style='font-weight:700;color:#fff;font-size:0.86rem'>{nr["name"]}</span>
+                </div>
+                <div style='font-size:0.7rem;color:#444;margin-top:0.2rem'>
+                    {nr["circuit"]} · <span style='color:{nr_color}'>{nr["circuit_type"].replace("_"," ").title()}</span>{sprint_txt}
+                </div>
+                <div style='font-size:0.68rem;color:#666;margin-top:0.22rem'>
+                    {pd.Timestamp(nr["date"]).strftime("%b %d, %Y")}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ── Divider ──────────────────────────────────────────────────────────
+        st.markdown("""
+        <div style='margin:0.6rem 0; border-top:1px solid rgba(255,255,255,0.05)'></div>
+        """, unsafe_allow_html=True)
+
+        # ── Model status ──────────────────────────────────────────────────────
+        st.markdown(f"""
+        <div style='font-size:0.55rem;color:#2a2a3a;text-transform:uppercase;
+                    letter-spacing:0.18em;padding:0 0.2rem 0.4rem 0.2rem;font-weight:700'>
+            {get_icon('cpu', 11, '#2a2a3a', 4)}ML Engine
+        </div>""", unsafe_allow_html=True)
+
         if not engine.is_trained:
+            st.markdown(f"""
+            <div class='sb-card' style='border-color:rgba(255,30,0,0.2)'>
+                <div style='display:flex;align-items:center;gap:0.5rem'>
+                    <div style='width:8px;height:8px;border-radius:50%;background:#ff1e00;
+                                box-shadow:0 0 8px #ff1e00'></div>
+                    <span style='font-size:0.72rem;color:#ff6b00;font-weight:600'>MODEL OFFLINE</span>
+                </div>
+                <div style='font-size:0.62rem;color:#333;margin-top:0.3rem'>
+                    Initialize to enable predictions
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
             if st.button("Initialize Model", use_container_width=True):
-                with st.spinner("Processing Stacking Ensemble..."):
+                with st.spinner("Training Stacking Ensemble..."):
                     engine.quick_demo_train()
                 st.rerun()
         else:
             best = engine.ml_models.best_model_name
             res  = engine.ml_models.training_results
-            mae  = res.get(best, {}).get("mae", "–")
-            r2   = res.get(best, {}).get("r2", "–")
-            st.markdown(
-                f"<div style='text-align:center; color:#00ff88; font-family:Orbitron; font-size:0.8rem; font-weight:700; margin-top:0.5rem'>{get_icon('check', 14, '#00ff88')} STACKING ACTIVE</div>"
-                f"<div style='text-align:center; font-size:0.65rem; color:#777; margin-top:0.3rem'>"
-                f"MAE {mae} pos &nbsp;·&nbsp; R² {r2}</div>",
-                unsafe_allow_html=True)
+            mae  = res.get(best, {}).get("mae", "-")
+            r2   = res.get(best, {}).get("r2",  "-")
+            st.markdown(f"""
+            <div class='sb-card' style='border-color:rgba(0,255,136,0.2)'>
+                <div style='display:flex;align-items:center;gap:0.5rem'>
+                    <div style='width:8px;height:8px;border-radius:50%;background:#00ff88;
+                                box-shadow:0 0 8px #00ff88'></div>
+                    <span style='font-size:0.72rem;color:#00ff88;font-weight:700;font-family:Orbitron'>ACTIVE</span>
+                </div>
+                <div style='font-size:0.65rem;color:#444;margin-top:0.3rem'>
+                    {best} · MAE {mae} · R² {r2}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        # ── Slim footer watermark ─────────────────────────────────────────────
+        st.markdown(f"""
+        <div style='margin-top:1.5rem;padding-top:0.8rem;border-top:1px solid rgba(255,255,255,0.04);
+                    text-align:center'>
+            <img src='{F1_LOGO_URL}' style='width:50px;opacity:0.12;filter:grayscale(1)'>
+            <div style='font-size:0.5rem;color:#1e1e2e;margin-top:0.25rem;letter-spacing:0.1em'>
+                F1 2026 PREDICTOR
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
         return page_choice
+
+
 
 # ─── HOME PAGE ────────────────────────────────────────────────────────────────
 def show_home():
@@ -317,7 +754,7 @@ def show_home():
         </div>
         """, unsafe_allow_html=True)
     else:
-        st.markdown("<div class='countdown-box' style='color:#00ff88; font-family:Orbitron;'>🏁 THE 2026 F1 SEASON IS UNDERWAY!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='countdown-box' style='color:#00ff88; font-family:Orbitron;'>THE 2026 F1 SEASON IS UNDERWAY!</div>", unsafe_allow_html=True)
 
     st.markdown("")
 
@@ -332,7 +769,7 @@ def show_home():
         col.markdown(f"<div class='metric-card'><div class='val'>{val}</div><div class='label'>{label}</div></div>", unsafe_allow_html=True)
 
     # Regulation highlights
-    st.markdown("<div class='section-header'>🔧 THE NEW ERA — 2026 REGULATIONS</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='section-header'>{get_icon('settings', 18, '#ff6b00')} THE NEW ERA — 2026 REGULATIONS</div>", unsafe_allow_html=True)
     r1, r2, r3, r4 = st.columns(4)
     regs = [
         ("zap", "Active Aerodynamics", "Movable front & rear wings. X-Mode on straights, Z-Mode in corners — replacing DRS entirely."),
@@ -344,7 +781,7 @@ def show_home():
         col.markdown(f"<div class='reg-card'><div class='reg-icon'>{get_icon(icon_name, 32, '#ff6b00')}</div><h4>{title}</h4><p>{desc}</p></div>", unsafe_allow_html=True)
 
     # New teams
-    st.markdown("<div class='section-header'>🆕 THE CLASS OF 2026</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='section-header'>{get_icon('sparkles', 18, '#ff1e00')} THE CLASS OF 2026</div>", unsafe_allow_html=True)
     n1, n2, n3 = st.columns(3)
     with n1:
         st.markdown("""
@@ -372,7 +809,7 @@ def show_home():
         """, unsafe_allow_html=True)
 
     # Team grid
-    st.markdown("<div class='section-header'>🏎️ CONSTRUCTOR LINEUP</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1e00')} CONSTRUCTOR LINEUP</div>", unsafe_allow_html=True)
     team_data = []
     for info in DRIVERS_2026:
         team = info["team"]
@@ -402,65 +839,311 @@ def show_home():
     )
     st.plotly_chart(fig, use_container_width=True)
 
+
 # ─── CALENDAR PAGE ───────────────────────────────────────────────────────────
 def show_calendar():
-    st.markdown("""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">📅 2026 RACE CALENDAR</h1>
-        <p>24 Grands Prix across 5 continents · 6 Sprint weekends</p>
-    </div>""", unsafe_allow_html=True)
-
+    today = pd.Timestamp(date.today())
     cal_df = pd.DataFrame(CALENDAR_2026)
     cal_df["date"] = pd.to_datetime(cal_df["date"])
 
-    # Filter controls
-    fc1, fc2 = st.columns(2)
+    # ── Hero ─────────────────────────────────────────────────────────────────
+    upcoming = cal_df[cal_df["date"] >= today]
+    completed = cal_df[cal_df["date"] < today]
+    races_done = len(completed)
+    races_left = len(upcoming)
+    next_race  = upcoming.iloc[0] if not upcoming.empty else None
+
+    status_badge = ""
+    if next_race is not None:
+        nr_days = (next_race["date"] - today).days
+        sprint_tag = " <span style='background:#9b30ff;color:#fff;font-size:0.52rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:5px;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
+        status_badge = (
+            f"<div style='margin-top:0.7rem;display:inline-flex;align-items:center;gap:0.6rem;"
+            f"background:rgba(255,30,0,0.08);border:1px solid rgba(255,30,0,0.2);"
+            f"border-radius:20px;padding:0.35rem 0.9rem;font-size:0.78rem;color:#ccc'>"
+            f"{get_icon('compass', 14, '#ff6b00', 6)}"
+            f"<span>Next: <b style='color:#fff'>{next_race['name']}</b>{sprint_tag}</span>"
+            f"<span style='color:#ff1e00;font-family:Orbitron;font-weight:900'>"
+            f"{'TODAY' if nr_days == 0 else f'in {nr_days}d'}</span></div>"
+        )
+
+    st.markdown(f"""<div class="f1-hero" style="padding:1.6rem 2rem;text-align:left">
+        <div style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem'>
+          <div>
+            <h1 style="font-size:1.7rem;margin:0">{get_icon("calendar",26,"#ff1e00")} 2026 GRAND PRIX CALENDAR</h1>
+            <p style="margin:0.4rem 0 0 0">24 Grands Prix &middot; 5 continents &middot; 6 Sprint weekends</p>
+          </div>
+          <div style='display:flex;gap:1.2rem'>
+            <div style='text-align:center'>
+              <div style='font-family:Orbitron;font-size:1.6rem;font-weight:900;color:#ff1e00'>{races_done}</div>
+              <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Completed</div>
+            </div>
+            <div style='text-align:center'>
+              <div style='font-family:Orbitron;font-size:1.6rem;font-weight:900;color:#27F4D2'>{races_left}</div>
+              <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Remaining</div>
+            </div>
+          </div>
+        </div>
+        {status_badge}
+    </div>""", unsafe_allow_html=True)
+
+    # ── Filter bar ───────────────────────────────────────────────────────────
+    FILTER_OPTS = ["All", "Street", "Technical", "Power", "High Speed", "Sprint"]
+    ct_map = {"Street": "street", "Technical": "technical",
+               "Power": "power", "High Speed": "high_speed"}
+
+    st.markdown("<div style='height:0.3rem'></div>", unsafe_allow_html=True)
+    fc1, fc2 = st.columns([3, 1])
     with fc1:
-        ct_filter = st.multiselect("Circuit Type", ["all types"] + list(cal_df["circuit_type"].unique()), default=["all types"])
+        chosen_filter = st.radio(
+            "filter", FILTER_OPTS, horizontal=True, label_visibility="collapsed", index=0
+        )
     with fc2:
-        sprint_filter = st.checkbox("Sprint weekends only", value=False)
+        show_past = st.checkbox("Show past races", value=True)
 
     filtered = cal_df.copy()
-    if sprint_filter:
+    if not show_past:
+        filtered = filtered[filtered["date"] >= today]
+    if chosen_filter == "Sprint":
         filtered = filtered[filtered["sprint"] == True]
-    if ct_filter and "all types" not in ct_filter:
-        filtered = filtered[filtered["circuit_type"].isin(ct_filter)]
+    elif chosen_filter != "All":
+        filtered = filtered[filtered["circuit_type"] == ct_map[chosen_filter]]
 
-    for _, race in filtered.iterrows():
-        country_name = CIRCUIT_FLAG.get(race["country"], "International")
-        sprint_badge = "<span class='race-sprint-badge'>SPRINT</span>" if race["sprint"] else ""
-        ct_color = {"power":"#ff6b00","high_speed":"#ff1e00","street":"#FF87BC","technical":"#27F4D2","balanced":"#aaa"}.get(race["circuit_type"],"#888")
+    # ── Circuit-type color map ────────────────────────────────────────────────
+    ct_color_map = {
+        "power":     "#ff6b00",
+        "high_speed":"#ff1e00",
+        "street":    "#FF87BC",
+        "technical": "#27F4D2",
+        "balanced":  "#aaa",
+    }
+
+    # ── Group by month ────────────────────────────────────────────────────────
+    filtered = filtered.sort_values("date").reset_index(drop=True)
+    filtered["month_label"] = filtered["date"].dt.strftime("%B %Y")
+
+    current_month = None
+
+    # We'll render cards in groups of 2 (two-column grid)
+    rows = list(filtered.iterrows())
+    i = 0
+    while i < len(rows):
+        _, race_a = rows[i]
+
+        # Month divider
+        if race_a["month_label"] != current_month:
+            current_month = race_a["month_label"]
+            month_races = filtered[filtered["month_label"] == current_month]
+            race_count = len(month_races)
+            sprint_count = int(month_races["sprint"].sum())
+            st.markdown(f"""
+            <div style='display:flex;align-items:center;gap:0.8rem;
+                        margin:1.6rem 0 0.7rem 0'>
+              <div style='font-family:Orbitron;font-size:0.75rem;font-weight:900;
+                          color:#fff;letter-spacing:0.15em;text-transform:uppercase'>
+                {current_month}
+              </div>
+              <div style='flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent)'></div>
+              <div style='font-size:0.6rem;color:#444'>
+                {race_count} race{"s" if race_count != 1 else ""}
+                {f"&nbsp;&middot;&nbsp;<span style='color:#9b30ff'>{sprint_count} sprint</span>" if sprint_count else ""}
+              </div>
+            </div>""", unsafe_allow_html=True)
+
+        # Pair the cards (or lone card at end of month / filter)
+        pair_in_month = []
+        for j in range(i, min(i + 2, len(rows))):
+            _, r = rows[j]
+            if r["month_label"] == race_a["month_label"]:
+                pair_in_month.append(r)
+            else:
+                break
+
+        cols = st.columns(len(pair_in_month))
+        for col, race in zip(cols, pair_in_month):
+            _render_race_card(col, race, ct_color_map, today)
+
+        i += len(pair_in_month)
+
+    # ── Season timeline chart ─────────────────────────────────────────────────
+    st.markdown("<div class='section-header' style='margin-top:2.5rem'>SEASON TIMELINE</div>",
+                unsafe_allow_html=True)
+    month_counts = (
+        cal_df.groupby(cal_df["date"].dt.month_name()).size()
+        .reindex(["March","April","May","June","July","August",
+                  "September","October","November","December"], fill_value=0)
+        .reset_index()
+    )
+    month_counts.columns = ["Month", "Races"]
+    fig = px.bar(month_counts, x="Month", y="Races", color="Races",
+                 color_continuous_scale=["#1a1a2e", "#ff6b00", "#ff1e00"])
+    dark_layout(fig, "Races Per Month", 260)
+    fig.update_coloraxes(showscale=False)
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def _render_race_card(col, race, ct_color_map, today):
+    """Render a single race card with map + detail expander."""
+    ct_color   = ct_color_map.get(race["circuit_type"], "#888")
+    ct_label   = race["circuit_type"].replace("_", " ").upper()
+    flag_e     = flag_pill(race["flag"], "#888")
+    date_str   = race["date"].strftime("%b %d, %Y")
+    day_name   = race["date"].strftime("%A")
+    is_past    = race["date"] < today
+    is_next    = False
+    upcoming_df = pd.DataFrame(CALENDAR_2026)
+    upcoming_df["date"] = pd.to_datetime(upcoming_df["date"])
+    nxt = upcoming_df[upcoming_df["date"] >= today]
+    if not nxt.empty and nxt.iloc[0]["round"] == race["round"]:
+        is_next = True
+
+    sprint_badge = (
+        "<span style='background:linear-gradient(90deg,#9b30ff,#6600cc);"
+        "color:#fff;font-size:0.5rem;font-weight:800;letter-spacing:0.1em;"
+        "padding:0.15rem 0.45rem;border-radius:5px;margin-left:0.4rem;"
+        "vertical-align:middle;text-transform:uppercase'>SPRINT</span>"
+        if race["sprint"] else ""
+    )
+
+    border_color = "#ff1e00" if is_next else ("rgba(255,255,255,0.04)" if is_past else "rgba(255,255,255,0.08)")
+    past_opacity = "opacity:0.55;" if is_past else ""
+    glow = "box-shadow:0 0 24px rgba(255,30,0,0.18);" if is_next else ""
+
+    with col:
+        # ── Card header (always visible) ──────────────────────────────────
         st.markdown(f"""
-        <div class='race-card'>
-            <div class='race-round'>R{race["round"]}</div>
-            <div style='flex:1'>
-                <div style='font-weight:600; color:#fff; font-size:1rem'>{race["name"]} {sprint_badge}</div>
-                <div style='font-size:0.8rem; color:#888; margin-top:0.1rem'>{race["circuit"]} &middot; {country_name}</div>
+        <div style='background:rgba(18,18,30,0.85);
+                    border:1px solid {border_color};border-radius:18px;
+                    padding:1rem 1.1rem 0.7rem 1.1rem;
+                    transition:all 0.25s;{glow}{past_opacity}margin-bottom:0.2rem'>
+          <div style='display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem'>
+            <div style='display:flex;align-items:center;gap:0.55rem;flex:1;min-width:0'>
+              <div style='background:linear-gradient(135deg,#ff1e00,#ff6b00);
+                          color:#fff;font-family:Orbitron;font-size:0.62rem;
+                          font-weight:900;padding:0.25rem 0.5rem;
+                          border-radius:7px;letter-spacing:0.06em;flex-shrink:0'>
+                R{race["round"]}
+              </div>
+              {flag_e}
+              <div style='min-width:0'>
+                <div style='font-weight:700;color:{"#888" if is_past else "#fff"};
+                             font-size:0.9rem;white-space:nowrap;
+                             overflow:hidden;text-overflow:ellipsis'>
+                  {race["name"]}{sprint_badge}
+                </div>
+                <div style='font-size:0.68rem;color:#444;margin-top:2px'>
+                  {race["circuit"]}
+                </div>
+              </div>
             </div>
-            <div style='text-align:right'>
-                <div style='font-size:0.85rem; color:#ccc'>{race["date"].strftime("%b %d, %Y")}</div>
-                <div style='font-size:0.7rem; color:{ct_color}; font-weight:600; text-transform:uppercase; margin-top:0.1rem'>{race["type"].replace("_"," ")}</div>
+            <div style='text-align:right;flex-shrink:0'>
+              <div style='font-size:0.75rem;color:{"#555" if is_past else "#bbb"};font-weight:500'>
+                {date_str}
+              </div>
+              <div style='display:inline-block;font-size:0.56rem;font-weight:700;
+                          text-transform:uppercase;letter-spacing:0.08em;
+                          padding:0.12rem 0.45rem;border-radius:999px;
+                          border:1px solid {ct_color};color:{ct_color};
+                          margin-top:0.3rem;opacity:{"0.5" if is_past else "1"}'>
+                {ct_label}
+              </div>
+              {'<div style="font-size:0.6rem;color:#00ff88;font-weight:700;margin-top:0.2rem">✓ COMPLETED</div>' if is_past else ('<div style="font-size:0.6rem;color:#ff1e00;font-weight:700;margin-top:0.2rem;animation:pulse 1.5s infinite">◉ NEXT RACE</div>' if is_next else "")}
             </div>
+          </div>
+
+          <!-- Location map thumbnail -->
+          {get_map_embed(race["circuit"], height=165)}
         </div>
         """, unsafe_allow_html=True)
 
-    # Calendar chart
-    st.markdown("<div class='section-header'>SEASON VISUALIZATION</div>", unsafe_allow_html=True)
-    months = cal_df["date"].dt.month_name().unique()
-    month_counts = cal_df.groupby(cal_df["date"].dt.month_name()).size().reindex(
-        ["March","April","May","June","July","August","September","October","November","December"], fill_value=0
-    ).reset_index()
-    month_counts.columns = ["Month", "Races"]
+        # ── Expander: track SVG + stats + weekend schedule ───────────────
+        with st.expander(f"Details — {race['circuit']}", expanded=False):
+            svg_col, stat_col = st.columns([1, 1.3])
+            details = CIRCUIT_DETAILS.get(race["circuit"], {})
 
-    fig = px.bar(month_counts, x="Month", y="Races", color="Races",
-                 color_continuous_scale=["#1a1a2e","#ff6b00","#ff1e00"])
-    dark_layout(fig, "Races Per Month", 300)
-    fig.update_coloraxes(showscale=False)
-    st.plotly_chart(fig, use_container_width=True)
+            with svg_col:
+                svg_html = get_track_svg(race["circuit"], color=ct_color)
+                st.markdown(
+                    f"<div style='display:flex;justify-content:center;"
+                    f"padding:0.5rem 0'>{svg_html}</div>",
+                    unsafe_allow_html=True,
+                )
+                st.markdown(
+                    f"<div style='text-align:center;font-family:Orbitron;"
+                    f"font-size:0.6rem;color:{ct_color};letter-spacing:0.12em;"
+                    f"text-transform:uppercase'>{race['circuit']}</div>",
+                    unsafe_allow_html=True,
+                )
+
+            with stat_col:
+                if details:
+                    st.markdown(f"""
+                    <div class='track-stat-grid'>
+                      <div class='track-stat'>
+                        <div class='track-stat-label'>Track Length</div>
+                        <div class='track-stat-value'>{details.get("length","–")} km</div>
+                      </div>
+                      <div class='track-stat'>
+                        <div class='track-stat-label'>DRS Zones</div>
+                        <div class='track-stat-value'>{details.get("drs_zones","–")}</div>
+                      </div>
+                      <div class='track-stat'>
+                        <div class='track-stat-label'>First GP</div>
+                        <div class='track-stat-value'>{details.get("first_gp","–")}</div>
+                      </div>
+                      <div class='track-stat'>
+                        <div class='track-stat-label'>Laps</div>
+                        <div class='track-stat-value'>{race["laps"]}</div>
+                      </div>
+                    </div>
+                    <div class='track-stat' style='margin-top:0.5rem'>
+                      <div class='track-stat-label'>Lap Record</div>
+                      <div class='track-stat-value' style='color:#ff6b00;font-size:0.78rem'>
+                        {details.get("lap_record","–")}
+                      </div>
+                    </div>
+                    <div class='track-stat' style='margin-top:0.5rem'>
+                      <div class='track-stat-label'>Key Corner</div>
+                      <div class='track-stat-value' style='font-size:0.78rem'>
+                        {details.get("key_corner","–")}
+                      </div>
+                    </div>
+                    <div style='margin-top:0.6rem;padding:0.55rem 0.8rem;
+                                background:rgba(255,255,255,0.02);border-radius:8px;
+                                border-left:3px solid {ct_color};
+                                font-size:0.72rem;color:#aaa;line-height:1.55'>
+                      {details.get("characteristic","")}
+                    </div>""", unsafe_allow_html=True)
+
+            # Weekend schedule
+            schedule = _SPRINT_WKD if race["sprint"] else _NORMAL_WKD
+            st.markdown(
+                f"<div style='margin-top:0.9rem;margin-bottom:0.3rem;"
+                f"font-size:0.62rem;color:#444;text-transform:uppercase;"
+                f"letter-spacing:0.12em;font-weight:700'>"
+                f"{get_icon('clock',11,'#444',4)} Weekend Schedule</div>",
+                unsafe_allow_html=True
+            )
+            rows_html = ""
+            for day, session, color in schedule:
+                rows_html += (
+                    f"<div style='display:flex;align-items:center;gap:0.5rem;"
+                    f"padding:0.28rem 0;border-bottom:1px solid rgba(255,255,255,0.04)'>"
+                    f"<span style='font-family:Orbitron;font-size:0.52rem;font-weight:700;"
+                    f"color:#333;min-width:28px'>{day}</span>"
+                    f"<span style='width:3px;height:3px;border-radius:50%;"
+                    f"background:{color};flex-shrink:0'></span>"
+                    f"<span style='font-size:0.72rem;color:{color};font-weight:600'>"
+                    f"{session}</span></div>"
+                )
+            st.markdown(f"<div style='padding:0 0.2rem'>{rows_html}</div>",
+                        unsafe_allow_html=True)
+
 
 # ─── RACE PREDICTOR PAGE ─────────────────────────────────────────────────────
 def show_race_predictor(engine):
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('predictor', 32, '#ff1e00')} RACE PREDICTOR</h1>
+        <h1 style="font-size:1.8rem">{get_icon('predictor', 28, '#ff1e00')} RACE PREDICTOR</h1>
         <p>Select any 2026 Grand Prix &middot; Monte Carlo simulation &middot; Animated podium</p>
     </div>""", unsafe_allow_html=True)
 
@@ -478,7 +1161,7 @@ def show_race_predictor(engine):
         show_laps = st.checkbox("Lap-by-Lap Trace", value=True)
 
     race_info = next(r for r in CALENDAR_2026 if r["name"] == selected_race_name)
-    country_name = CIRCUIT_FLAG.get(race_info["country"], "International")
+    country_name = COUNTRY_NAMES.get(race_info.get("flag",""), race_info["country"])
 
     if st.button(f"PREDICT {selected_race_name.upper()}", use_container_width=True):
         with st.spinner(f"Running {n_sims:,} simulations for {selected_race_name}..."):
@@ -489,7 +1172,7 @@ def show_race_predictor(engine):
         ct_color = {
             "power": "#ff6b00", "high_speed": "#ff1e00", "street": "#FF87BC",
             "technical": "#27F4D2", "balanced": "#aaa"
-        }.get(race_info["type"], "#888")
+        }.get(race_info["circuit_type"], "#888")
         sprint_badge = "<span class='race-sprint-badge'>SPRINT WEEKEND</span>" if race_info["sprint"] else ""
 
         st.markdown(f"""
@@ -499,7 +1182,7 @@ def show_race_predictor(engine):
             <div style='flex:1'>
                 <div style='font-family:Orbitron;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div>
                 <div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot;
-                <span style='color:{ct_color}'>{race_info["type"].replace("_"," ").title()}</span></div>
+                <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>
                 {sprint_badge}
             </div>
         </div>
@@ -664,7 +1347,7 @@ def show_season_simulator(engine):
         st.plotly_chart(fig, use_container_width=True)
 
         # Constructors
-        st.markdown("<div class='section-header'>🏗️ CONSTRUCTORS' CHAMPIONSHIP</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='section-header'>{get_icon('layers', 18, '#ff1e00')} CONSTRUCTORS' CHAMPIONSHIP</div>", unsafe_allow_html=True)
         con_df = (
             standings.groupby(["team", "team_color"])
             .agg(points=("points", "sum"), wins=("wins", "sum"))
@@ -686,7 +1369,7 @@ def show_season_simulator(engine):
         st.plotly_chart(fig2, use_container_width=True)
 
         # Full table
-        st.markdown("<div class='section-header'>📋 FULL STANDINGS TABLE</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='section-header'>{get_icon('list', 18, '#ff1e00')} FULL STANDINGS TABLE</div>", unsafe_allow_html=True)
         disp = standings[["position", "driver_code", "driver_name", "team", "points", "wins", "podiums"]].copy()
         disp["points"] = disp["points"].astype(int)
         disp = disp.rename(columns={
@@ -698,8 +1381,8 @@ def show_season_simulator(engine):
 
 # ─── DRIVER PROFILES PAGE ─────────────────────────────────────────────────────
 def show_driver_profiles():
-    st.markdown("""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">👤 DRIVER PROFILES</h1>
+    st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
+        <h1 style="font-size:1.8rem">{get_icon('user', 28, '#ff1e00')} DRIVER PROFILES</h1>
         <p>All 22 drivers &middot; Performance ratings &middot; Team details</p>
     </div>""", unsafe_allow_html=True)
 
@@ -761,7 +1444,7 @@ def show_driver_profiles():
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("<div class='section-header'>📊 DRIVER COMPARISON RADAR</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='section-header'>{get_icon('bar-chart', 18, '#ff1e00')} DRIVER COMPARISON RADAR</div>", unsafe_allow_html=True)
     all_codes = [r["code"] for r in rows]
     default_sel = all_codes[:4] if len(all_codes) >= 4 else all_codes
     sel_drivers = st.multiselect("Select drivers to compare", all_codes, default=default_sel)
@@ -858,13 +1541,13 @@ def show_analytics():
             st.plotly_chart(fig4, use_container_width=True)
 
         regs_detail = [
-            ("⚡ Active Aero — X-Mode",
+            (f'{get_icon("zap", 16, "#ff6b00", 5)} Active Aero — X-Mode',
              "On straights: wings flatten for minimum drag. Available simultaneously to all cars — not gated by 1-second gap. Top speeds up significantly."),
-            ("⚡ Active Aero — Z-Mode",
+            (f'{get_icon("zap", 16, "#27F4D2", 5)} Active Aero — Z-Mode',
              "In corners: wings pitch back for max downforce. The system auto-transitions, fully replacing DRS."),
-            ("🔋 Overtake Mode",
+            (f'{get_icon("zap", 16, "#FFD700", 5)} Overtake Mode',
              "Within 1s of the car ahead, an extra 0.5 MJ unlocked for the following lap. New overtaking philosophy."),
-            ("🏭 New Teams Reality",
+            (f'{get_icon("building", 16, "#ff6b00", 5)} New Teams Reality',
              "Audi and Cadillac are entirely new operations. Historical data: new teams take 2-3 seasons to reach midfield. Expect P9-11 in 2026."),
         ]
         st.markdown("<div class='section-header'>KEY CHANGES EXPLAINED</div>", unsafe_allow_html=True)
