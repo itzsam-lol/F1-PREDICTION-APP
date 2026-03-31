@@ -22,7 +22,9 @@ st.set_page_config(
 # ─── GLOBAL CSS ───────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+    * { font-family: 'Space Grotesk', sans-serif; }
 
     /* ── Sidebar ─────────────────────────────────────────── */
     [data-testid="stSidebar"] {
@@ -54,16 +56,16 @@ st.markdown("""
         margin-bottom: 2rem; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative;
     }
     .f1-hero h1 {
-        font-family: 'Orbitron', monospace; font-size: 3rem; font-weight: 900;
-        background: linear-gradient(90deg, #ff1e00, #ff6b00);
+        font-family: 'Rajdhani', monospace; font-size: 3.5rem; font-weight: 700; letter-spacing: 0.05em;
+        background: linear-gradient(90deg, #ff1801, #ff8700);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
     }
     .f1-hero p { color: #888; margin-top: 1rem; font-size: 1.1rem; }
 
     /* ── Section header ──────────────────────────────────── */
     .section-header {
-        font-family: 'Orbitron', monospace; font-size: 1.1rem; font-weight: 700;
-        color: #fff; border-left: 4px solid #ff1e00; border-radius: 2px;
+        font-family: 'Rajdhani', monospace; font-size: 1.4rem; font-weight: 700;
+        color: #fff; border-left: 4px solid #ff1801; border-radius: 2px;
         padding-left: 0.8rem; margin: 2rem 0 1.2rem 0;
         text-transform: uppercase; letter-spacing: 0.1em;
     }
@@ -75,7 +77,7 @@ st.markdown("""
         padding: 1.5rem; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-align: center;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #ff1e00; box-shadow: 0 15px 35px rgba(255,30,0,0.15); }
-    .metric-card .val { font-family: 'Orbitron'; font-size: 2.2rem; font-weight: 900; color: #ff1e00; }
+    .metric-card .val { font-family: 'Rajdhani', monospace; font-size: 2.8rem; font-weight: 700; color: #ff1801; }
     .metric-card .label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
 
     /* ── Driver card ─────────────────────────────────────── */
@@ -104,7 +106,7 @@ st.markdown("""
     .race-header-row { display: flex; align-items: center; gap: 1rem; width: 100%; padding: 0.4rem 0; }
     .race-rnd {
         background: linear-gradient(135deg, #ff1e00, #ff6b00); color: #fff;
-        font-family: 'Orbitron'; font-size: 0.7rem; font-weight: 900;
+        font-family: 'Rajdhani'; font-size: 0.7rem; font-weight: 900;
         padding: 0.3rem 0.55rem; border-radius: 8px; letter-spacing: 0.08em;
         min-width: 36px; text-align: center; flex-shrink: 0;
     }
@@ -150,7 +152,7 @@ st.markdown("""
         border-radius: 14px; padding: 0.85rem 1rem; margin: 0.3rem 0;
     }
     .sb-card-label { font-size: 0.58rem; color: #444; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
-    .sb-card-value { font-family: 'Orbitron'; font-size: 1rem; font-weight: 900; color: #fff; }
+    .sb-card-value { font-family: 'Rajdhani'; font-size: 1rem; font-weight: 900; color: #fff; }
     .sb-card-sub { font-size: 0.68rem; color: #555; margin-top: 0.15rem; }
 
     /* ── Podium ──────────────────────────────────────────── */
@@ -162,11 +164,11 @@ st.markdown("""
     .reg-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 1.5rem; height: 100%; transition: all 0.3s; }
     .reg-card:hover { background: rgba(255,255,255,0.06); }
     .countdown-box { background: rgba(255,30,0,0.03); border: 1px solid #ff1e0033; border-radius: 24px; padding: 2rem; text-align: center; }
-    .countdown-num { font-family: 'Orbitron'; font-size: 3.5rem; font-weight: 900; color: #fff; filter: drop_shadow(0 0 15px rgba(255,30,0,0.4)); }
+    .countdown-num { font-family: 'Rajdhani'; font-size: 3.5rem; font-weight: 900; color: #fff; filter: drop_shadow(0 0 15px rgba(255,30,0,0.4)); }
     .countdown-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 0.2em; margin-left: 0.4rem; vertical-align: super; }
     .stDataFrame { border-radius: 20px !important; }
-    .stButton>button { border-radius: 12px !important; transition: all 0.3s; font-family: 'Orbitron'; }
-    .stSelectbox label, .stMultiSelect label { font-family: 'Inter'; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem !important; color: #555 !important; }
+    .stButton>button { border-radius: 12px !important; transition: all 0.3s; font-family: 'Rajdhani'; }
+    .stSelectbox label, .stMultiSelect label { font-family: 'Space Grotesk'; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem !important; color: #555 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -247,9 +249,9 @@ def _hex_rgba(hex_color: str, alpha: float = 0.2) -> str:
 
 def dark_layout(fig, title="", height=420):
     fig.update_layout(
-        title=dict(text=title, font=dict(family="Orbitron", size=14, color="#fff")),
+        title=dict(text=title, font=dict(family="Rajdhani", size=16, color="#fff")),
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter", color="#aaa"),
+        font=dict(family="Space Grotesk", color="#aaa"),
         height=height,
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#ccc")),
         margin=dict(t=50, b=40, l=40, r=20),
@@ -305,7 +307,7 @@ CIRCUIT_DETAILS = {
     "Singapore":     {"length": 4.940, "lap_record": "1:35.867 (Santos, 2023)",     "drs_zones": 3, "first_gp": 2008, "key_corner": "Turn 5 (Raffles Blvd)", "characteristic": "Night race, hottest/most humid circuit, most corners"},
     "Austin":        {"length": 5.513, "lap_record": "1:36.169 (Leclerc, 2019)",   "drs_zones": 2, "first_gp": 2012, "key_corner": "Turn 1 (blind crest)",  "characteristic": "Technical Hermann Tilke design, challenging elevation change"},
     "Mexico City":   {"length": 4.304, "lap_record": "1:17.774 (Bottas, 2021)",    "drs_zones": 3, "first_gp": 1963, "key_corner": "Estadio section",        "characteristic": "Highest altitude circuit (2285m), massive straight, low aero"},
-    "Interlagos":    {"length": 4.309, "lap_record": "1:10.540 (Rubens, 2004)",    "drs_zones": 2, "first_gp": 1973, "key_corner": "Senna S",                "characteristic": "Anti-clockwise, undulating, unpredictable weather"},
+    "Space Grotesklagos":    {"length": 4.309, "lap_record": "1:10.540 (Rubens, 2004)",    "drs_zones": 2, "first_gp": 1973, "key_corner": "Senna S",                "characteristic": "Anti-clockwise, undulating, unpredictable weather"},
     "Las Vegas":     {"length": 6.201, "lap_record": "1:35.490 (Leclerc, 2023)",   "drs_zones": 3, "first_gp": 2023, "key_corner": "Turn 14 hairpin (Apex)", "characteristic": "Strip circuit, nighttime glamour, fast straights"},
     "Lusail":       {"length": 5.380, "lap_record": "1:24.319 (Verstappen, 2023)", "drs_zones": 2, "first_gp": 2021, "key_corner": "Turn 1 braking zone",   "characteristic": "High-speed flowing layout, massive tyre degradation"},
     "Yas Marina":   {"length": 5.281, "lap_record": "1:26.103 (Verstappen, 2021)", "drs_zones": 2, "first_gp": 2009, "key_corner": "Turn 6 (marina section)","characteristic": "Season finale, mixed day/night race, Abu Dhabi"},
@@ -335,7 +337,7 @@ CIRCUIT_COORDS = {
     "Singapore":    (  1.2914,  103.8644, 15),
     "Austin":       ( 30.1328,  -97.6411, 14),
     "Mexico City":  ( 19.4042,  -99.0907, 14),
-    "Interlagos":   (-23.7036,  -46.6997, 14),
+    "Space Grotesklagos":   (-23.7036,  -46.6997, 14),
     "Las Vegas":    ( 36.1147, -115.1728, 14),
     "Lusail":       ( 25.4900,   51.4542, 14),
     "Yas Marina":   ( 24.4672,   54.6031, 14),
@@ -409,7 +411,7 @@ def get_track_svg(circuit_name: str, color: str = "#ff1e00") -> str:
         "Singapore": "marina_bay.webp",
         "Austin": "americas.webp",
         "Mexico City": "rodriguez.webp",
-        "Interlagos": "interlagos.webp",
+        "Space Grotesklagos": "interlagos.webp",
         "Las Vegas": "vegas.webp",
         "Lusail": "losail.webp",
         "Yas Marina": "yas_marina.webp"
@@ -455,7 +457,7 @@ def render_sidebar(engine):
                     border-bottom:1px solid rgba(255,255,255,0.05); text-align:center'>
             <img src='{F1_LOGO_URL}'
                  style='width:100px; filter:drop-shadow(0 0 18px rgba(255,30,0,0.5)) brightness(1.1)'>
-            <div style='margin-top:0.6rem; font-family:"Orbitron",monospace; font-size:0.5rem;
+            <div style='margin-top:0.6rem; font-family:"Rajdhani",monospace; font-size:0.5rem;
                         font-weight:700; letter-spacing:0.35em; color:#ff1e00;
                         text-transform:uppercase'>2026 Intelligence Hub</div>
         </div>
@@ -499,7 +501,7 @@ def render_sidebar(engine):
             <div class='sb-card'>
                 <div class='sb-card-label'>{get_icon('clock', 12, '#444', 4)} Season Countdown</div>
                 <div style='display:flex;align-items:baseline;gap:0.5rem;margin-top:0.3rem'>
-                    <span style='font-family:Orbitron;font-size:2rem;font-weight:900;
+                    <span style='font-family:Rajdhani;font-size:2rem;font-weight:900;
                                  color:#ff1e00;text-shadow:0 0 20px rgba(255,30,0,0.4)'>
                         {days_left}
                     </span>
@@ -512,7 +514,7 @@ def render_sidebar(engine):
             st.markdown(f"""
             <div class='sb-card' style='border-color:rgba(0,255,136,0.3)'>
                 <div class='sb-card-label'>{get_icon('race-flag', 12, '#00ff88', 4)} Season Status</div>
-                <div style='color:#00ff88;font-family:Orbitron;font-size:0.8rem;font-weight:700;margin-top:0.3rem'>
+                <div style='color:#00ff88;font-family:Rajdhani;font-size:0.8rem;font-weight:700;margin-top:0.3rem'>
                     LIVE SEASON ACTIVE
                 </div>
             </div>
@@ -585,7 +587,7 @@ def render_sidebar(engine):
                 <div style='display:flex;align-items:center;gap:0.5rem'>
                     <div style='width:8px;height:8px;border-radius:50%;background:#00ff88;
                                 box-shadow:0 0 8px #00ff88'></div>
-                    <span style='font-size:0.72rem;color:#00ff88;font-weight:700;font-family:Orbitron'>ACTIVE</span>
+                    <span style='font-size:0.72rem;color:#00ff88;font-weight:700;font-family:Rajdhani'>ACTIVE</span>
                 </div>
                 <div style='font-size:0.65rem;color:#444;margin-top:0.3rem'>
                     {best} · MAE {mae} · R² {r2}
@@ -624,13 +626,13 @@ def show_home():
         weeks, days = divmod(days_left, 7)
         st.markdown(f"""
         <div class="countdown-box">
-            <div style='font-family:Orbitron; font-size:0.8rem; color:#ff6b00; letter-spacing:0.15em; margin-bottom:0.8rem'>COUNTDOWN TO AUSTRALIAN GP &middot; MARCH 8</div>
+            <div style='font-family:Rajdhani; font-size:0.8rem; color:#ff6b00; letter-spacing:0.15em; margin-bottom:0.8rem'>COUNTDOWN TO AUSTRALIAN GP &middot; MARCH 8</div>
             <span class='countdown-num'>{weeks}</span><span class='countdown-label'>WKS</span>
             <span class='countdown-num'>{days}</span><span class='countdown-label'>DAYS</span>
         </div>
         """, unsafe_allow_html=True)
     else:
-        st.markdown("<div class='countdown-box' style='color:#00ff88; font-family:Orbitron;'>THE 2026 F1 SEASON IS UNDERWAY!</div>", unsafe_allow_html=True)
+        st.markdown("<div class='countdown-box' style='color:#00ff88; font-family:Rajdhani;'>THE 2026 F1 SEASON IS UNDERWAY!</div>", unsafe_allow_html=True)
 
     st.markdown("")
 
@@ -662,7 +664,7 @@ def show_home():
     with n1:
         st.markdown("""
         <div class='driver-card' style='border-color:#9B000055'>
-            <div style='color:#9B0000; font-family:Orbitron; font-weight:700'>AUDI FORMULA RACING</div>
+            <div style='color:#9B0000; font-family:Rajdhani; font-weight:700'>AUDI FORMULA RACING</div>
             <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Nico Hülkenberg · Gabriel Bortoleto</div>
             <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>Power Unit: Audi · First works entry in F1</div>
         </div>
@@ -670,7 +672,7 @@ def show_home():
     with n2:
         st.markdown("""
         <div class='driver-card' style='border-color:#00308755'>
-            <div style='color:#003087; font-family:Orbitron; font-weight:700'>CADILLAC FORMULA RACING</div>
+            <div style='color:#003087; font-family:Rajdhani; font-weight:700'>CADILLAC FORMULA RACING</div>
             <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Sergio Pérez · Valtteri Bottas</div>
             <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>Power Unit: Ferrari · First US works team</div>
         </div>
@@ -678,40 +680,47 @@ def show_home():
     with n3:
         st.markdown(f"""
         <div class='driver-card' style='border-color:#ff1e0055'>
-            <div style='color:#ff6b00; font-family:Orbitron; font-weight:700'>DEFENDING CHAMPION</div>
+            <div style='color:#ff6b00; font-family:Rajdhani; font-weight:700'>DEFENDING CHAMPION</div>
             <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Lando Norris &middot; McLaren (2025 WDC)</div>
             <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>McLaren also won 2025 Constructors' Championship</div>
         </div>
         """, unsafe_allow_html=True)
 
     # Team grid
-    st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1e00')} CONSTRUCTOR LINEUP</div>", unsafe_allow_html=True)
-    team_data = []
-    for info in DRIVERS_2026:
-        team = info["team"]
-        team_data.append({"team": team, "driver": info["name"], "code": info["code"]})
-    team_df = pd.DataFrame(team_data)
-    teams_grouped = team_df.groupby("team")["driver"].apply(lambda x: " & ".join(x)).reset_index()
-
+    st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1801')} CONSTRUCTOR PERFORMANCE 3D SPACE</div>", unsafe_allow_html=True)
+    
+    # 3D plot mapping Speed, Aero, and Reliability
     fig = go.Figure()
-    for i, row in teams_grouped.iterrows():
-        color = TEAM_COLORS_HEX.get(row["team"], "#888")
-        fig.add_trace(go.Bar(
-            x=[row["team"]],
-            y=[1],
-            name=row["team"],
-            marker_color=color,
-            text=[row["driver"]],
-            textposition="inside",
-            hovertemplate=f"<b>{row['team']}</b><br>{row['driver']}<extra></extra>",
+    for team, stats in TEAM_CAR_RATINGS.items():
+        color = TEAM_COLORS_HEX.get(team, "#888")
+        # find drivers for this team
+        drivers = [d["name"] for d in DRIVERS_2026 if d["team"] == team]
+        driver_text = "<br>".join(drivers)
+        fig.add_trace(go.Scatter3d(
+            x=[stats.get("speed", 5)],
+            y=[stats.get("aero_efficiency", 5)],
+            z=[stats.get("reliability", 5)],
+            mode="markers+text",
+            name=team,
+            text=[f"<b>{team}</b>"],
+            textposition="top center",
+            textfont=dict(color=color, size=12, family="Rajdhani"),
+            marker=dict(size=14, color=color, opacity=0.8, line=dict(width=2, color="#fff")),
+            hovertemplate=f"<b>{team}</b><br>{driver_text}<br>Speed: %{{x}}<br>Aero: %{{y}}<br>Reliability: %{{z}}<extra></extra>"
         ))
+    
     fig.update_layout(
-        showlegend=False, barmode="stack",
-        xaxis_tickangle=-30, height=280,
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter", color="#aaa"),
-        margin=dict(t=10, b=80, l=20, r=20),
-        yaxis=dict(showticklabels=False, showgrid=False),
+        scene=dict(
+            xaxis=dict(title="Top Speed", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+            yaxis=dict(title="Aero Efficiency", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+            zaxis=dict(title="Reliability", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+            bgcolor="rgba(0,0,0,0)"
+        ),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        height=500,
+        margin=dict(l=0, r=0, b=0, t=0),
+        showlegend=False
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -739,7 +748,7 @@ def show_calendar():
             f"border-radius:20px;padding:0.35rem 0.9rem;font-size:0.78rem;color:#ccc'>"
             f"{get_icon('compass', 14, '#ff6b00', 6)}"
             f"<span>Next: <b style='color:#fff'>{next_race['name']}</b>{sprint_tag}</span>"
-            f"<span style='color:#ff1e00;font-family:Orbitron;font-weight:900'>"
+            f"<span style='color:#ff1e00;font-family:Rajdhani;font-weight:900'>"
             f"{'TODAY' if nr_days == 0 else f'in {nr_days}d'}</span></div>"
         )
 
@@ -751,11 +760,11 @@ def show_calendar():
           </div>
           <div style='display:flex;gap:1.2rem'>
             <div style='text-align:center'>
-              <div style='font-family:Orbitron;font-size:1.6rem;font-weight:900;color:#ff1e00'>{races_done}</div>
+              <div style='font-family:Rajdhani;font-size:1.6rem;font-weight:900;color:#ff1e00'>{races_done}</div>
               <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Completed</div>
             </div>
             <div style='text-align:center'>
-              <div style='font-family:Orbitron;font-size:1.6rem;font-weight:900;color:#27F4D2'>{races_left}</div>
+              <div style='font-family:Rajdhani;font-size:1.6rem;font-weight:900;color:#27F4D2'>{races_left}</div>
               <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Remaining</div>
             </div>
           </div>
@@ -815,7 +824,7 @@ def show_calendar():
             st.markdown(f"""
             <div style='display:flex;align-items:center;gap:0.8rem;
                         margin:1.6rem 0 0.7rem 0'>
-              <div style='font-family:Orbitron;font-size:0.75rem;font-weight:900;
+              <div style='font-family:Rajdhani;font-size:0.75rem;font-weight:900;
                           color:#fff;letter-spacing:0.15em;text-transform:uppercase'>
                 {current_month}
               </div>
@@ -895,7 +904,7 @@ def _render_race_card(col, race, ct_color_map, today):
           <div style='display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem'>
             <div style='display:flex;align-items:center;gap:0.55rem;flex:1;min-width:0'>
               <div style='background:linear-gradient(135deg,#ff1e00,#ff6b00);
-                          color:#fff;font-family:Orbitron;font-size:0.62rem;
+                          color:#fff;font-family:Rajdhani;font-size:0.62rem;
                           font-weight:900;padding:0.25rem 0.5rem;
                           border-radius:7px;letter-spacing:0.06em;flex-shrink:0'>
                 R{race["round"]}
@@ -928,7 +937,7 @@ def _render_race_card(col, race, ct_color_map, today):
           </div>
 
           <!-- Location map thumbnail -->
-          {get_map_embed(race["circuit"], height=165)}
+          {get_track_svg(race["circuit"], color=ct_color)}
         </div>
         """, unsafe_allow_html=True)
 
@@ -938,14 +947,14 @@ def _render_race_card(col, race, ct_color_map, today):
             details = CIRCUIT_DETAILS.get(race["circuit"], {})
 
             with svg_col:
-                svg_html = get_track_svg(race["circuit"], color=ct_color)
+                map_html = get_map_embed(race["circuit"], height=200)
                 st.markdown(
                     f"<div style='display:flex;justify-content:center;"
-                    f"padding:0.5rem 0'>{svg_html}</div>",
+                    f"padding:0.5rem 0; width:100%'>{map_html}</div>",
                     unsafe_allow_html=True,
                 )
                 st.markdown(
-                    f"<div style='text-align:center;font-family:Orbitron;"
+                    f"<div style='text-align:center;font-family:Rajdhani;"
                     f"font-size:0.6rem;color:{ct_color};letter-spacing:0.12em;"
                     f"text-transform:uppercase'>{race['circuit']}</div>",
                     unsafe_allow_html=True,
@@ -1005,7 +1014,7 @@ def _render_race_card(col, race, ct_color_map, today):
                 rows_html += (
                     f"<div style='display:flex;align-items:center;gap:0.5rem;"
                     f"padding:0.28rem 0;border-bottom:1px solid rgba(255,255,255,0.04)'>"
-                    f"<span style='font-family:Orbitron;font-size:0.52rem;font-weight:700;"
+                    f"<span style='font-family:Rajdhani;font-size:0.52rem;font-weight:700;"
                     f"color:#333;min-width:28px'>{day}</span>"
                     f"<span style='width:3px;height:3px;border-radius:50%;"
                     f"background:{color};flex-shrink:0'></span>"
@@ -1056,7 +1065,7 @@ def show_race_predictor(engine):
                     border-radius:20px;padding:1.5rem 2rem;margin-bottom:2rem;
                     display:flex;gap:1.5rem;align-items:center'>
             <div style='flex:1'>
-                <div style='font-family:Orbitron;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div>
+                <div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div>
                 <div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot;
                 <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>
                 {sprint_badge}
@@ -1081,7 +1090,7 @@ def show_race_predictor(engine):
             col.markdown(f"""
             <div class='{medal_cls}'>
                 <div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div>
-                <div style='font-family:Orbitron; font-size:0.7rem; font-weight:700; color:{icon_color}; margin-bottom:0.4rem'>{medal_label}</div>
+                <div style='font-family:Rajdhani; font-size:0.7rem; font-weight:700; color:{icon_color}; margin-bottom:0.4rem'>{medal_label}</div>
                 <h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{d["driver_code"]}</h2>
                 <p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>
                     {d["driver_name"]}</p>
@@ -1108,7 +1117,7 @@ def show_race_predictor(engine):
         st.plotly_chart(fig, use_container_width=True)
 
         # Tabs
-        tab1, tab2, tab3 = st.tabs(["Full Grid", "Lap-by-Lap Trace", "Position Heatmap"])
+        tab1, tab2, tab3, tab4 = st.tabs(["Full Grid", "Lap-by-Lap Trace", "Position Heatmap", "3D Monte Carlo Trace"])
 
         with tab1:
             disp_cols = ["driver_code", "driver_name", "team", "expected_pos",
@@ -1169,6 +1178,42 @@ def show_race_predictor(engine):
             fig3.update_yaxes(autorange="reversed")
             st.plotly_chart(fig3, use_container_width=True)
 
+        with tab4:
+            if show_laps:
+                top10_codes = mc_df.head(10)["driver_code"].tolist()
+                lap_top = lap_df[lap_df["driver_code"].isin(top10_codes)]
+                fig4 = go.Figure()
+                for i, code in enumerate(top10_codes):
+                    sub = lap_top[lap_top["driver_code"] == code]
+                    if sub.empty: continue
+                    tc = TEAM_COLORS.get(sub["team"].iloc[0], "#888")
+                    fig4.add_trace(go.Scatter3d(
+                        x=sub["lap"],
+                        y=[code]*len(sub),
+                        z=sub["position"],
+                        mode='lines+markers',
+                        name=code,
+                        marker=dict(size=4, color=tc),
+                        line=dict(color=tc, width=4)
+                    ))
+                fig4.update_layout(
+                    title=dict(text="3D Monte Carlo Trajectory (Top 10)", font=dict(family="Rajdhani", size=18, color="#fff")),
+                    scene=dict(
+                        xaxis=dict(title="Lap", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+                        yaxis=dict(title="Driver", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+                        zaxis=dict(title="Position", autorange="reversed", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
+                        bgcolor="rgba(0,0,0,0)"
+                    ),
+                    paper_bgcolor="rgba(0,0,0,0)",
+                    plot_bgcolor="rgba(0,0,0,0)",
+                    height=600,
+                    margin=dict(l=0, r=0, b=0, t=40),
+                    showlegend=False
+                )
+                st.plotly_chart(fig4, use_container_width=True)
+            else:
+                st.info("Enable 'Lap-by-Lap Trace' checkbox to generate the 3D race simulation.")
+
 
 # ─── SEASON SIMULATOR PAGE ────────────────────────────────────────────────────
 def show_season_simulator(engine):
@@ -1195,9 +1240,9 @@ def show_season_simulator(engine):
             col.markdown(f"""
             <div class='driver-card' style='border-top:4px solid {tc};text-align:center'>
                 <div style='margin-bottom:0.5rem'>{get_icon('trophy', 24, tc)}</div>
-                <div style='font-family:Orbitron;font-weight:900;color:{tc};font-size:1rem'>{row["driver_code"]}</div>
+                <div style='font-family:Rajdhani;font-weight:900;color:{tc};font-size:1rem'>{row["driver_code"]}</div>
                 <div style='font-size:0.75rem;color:#888'>{row["driver_name"]}</div>
-                <div style='font-family:Orbitron;font-size:1.8rem;color:#fff;font-weight:900;margin-top:0.4rem'>
+                <div style='font-family:Rajdhani;font-size:1.8rem;color:#fff;font-weight:900;margin-top:0.4rem'>
                     {int(row["points"])} <span style='font-size:0.6rem;color:#555'>PTS</span>
                 </div>
                 <div style='font-size:0.75rem;color:#666;margin-top:0.2rem'>{int(row["wins"])} WINS</div>
@@ -1304,7 +1349,7 @@ def show_driver_profiles():
                     <div style='display:flex;gap:0.8rem;align-items:center;flex:1'>
                         <img src='{headshot_url}' style='width:64px;height:64px;object-fit:cover;border-radius:50%;background:rgba(255,255,255,0.05);border:2px solid {tc}'>
                         <div>
-                            <div style='font-size:1.4rem;font-weight:900;color:{tc};font-family:Orbitron'>
+                            <div style='font-size:1.4rem;font-weight:900;color:{tc};font-family:Rajdhani'>
                                 {driver["code"]}{rookie_label}</div>
                             <div style='font-size:0.88rem;color:#ccc;font-weight:600'>{driver["name"]}</div>
                             <div style='font-size:0.7rem;color:#555;text-transform:uppercase;letter-spacing:0.05em'>
@@ -1312,7 +1357,7 @@ def show_driver_profiles():
                         </div>
                     </div>
                     <div style='text-align:right'>
-                        <div style='font-family:Orbitron;font-size:1.8rem;font-weight:900;color:#ff1e00'>{driver["overall"]:.1f}</div>
+                        <div style='font-family:Rajdhani;font-size:1.8rem;font-weight:900;color:#ff1e00'>{driver["overall"]:.1f}</div>
                         <div style='font-size:0.6rem;color:#555;text-transform:uppercase'>Rating</div>
                     </div>
                 </div>
@@ -1449,7 +1494,7 @@ def show_analytics():
             fig5 = px.pie(ct_counts, names="Type", values="Count",
                           color="Type", color_discrete_map=ct_colors_map, hole=0.45)
             dark_layout(fig5, "Calendar by Circuit Type", 340)
-            fig5.update_traces(textinfo="label+percent", textfont=dict(family="Inter"))
+            fig5.update_traces(textinfo="label+percent", textfont=dict(family="Space Grotesk"))
             st.plotly_chart(fig5, use_container_width=True)
 
         with cia2:
