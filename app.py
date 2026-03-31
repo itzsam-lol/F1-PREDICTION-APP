@@ -9,7 +9,7 @@ import time
 from src.prediction_engine import F1PredictionEngine
 from src.data_collection import (
     DRIVERS_2026, CALENDAR_2026, TEAM_COLORS, TEAM_CAR_RATINGS,
-    CIRCUIT_TYPE_MULTIPLIERS
+    CIRCUIT_TYPE_MULTIPLIERS, POWER_UNITS
 )
 
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
