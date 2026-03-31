@@ -471,6 +471,7 @@ def render_sidebar(engine):
         NAV_ITEMS = [
             ("Home",             "home"),
             ("2026 Calendar",    "calendar"),
+            ("Race Analysis",    "layers"),
             ("Race Predictor",   "activity"),
             ("Season Simulator", "trophy"),
             ("Driver Profiles",  "user"),
@@ -607,104 +608,326 @@ def render_sidebar(engine):
 
 # ─── HOME PAGE ────────────────────────────────────────────────────────────────
 def show_home():
-    # Hero
-    st.markdown(f"""
-    <div class="f1-hero">
-        <h1>{get_icon('sparkles', 40, '#ff1e00')} FORMULA 1 &middot; 2026 <span class='f1-badge'>NEW ERA</span></h1>
-        <p>AI-powered predictions for the most transformative season in F1 history</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Hero with gradient mesh background
+    st.markdown(f"""<div style='background:linear-gradient(135deg,rgba(255,24,1,0.08) 0%,rgba(10,10,20,0.95) 40%,rgba(39,244,210,0.05) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:28px;padding:3rem 2.5rem 2.5rem;margin-bottom:2rem;text-align:center;position:relative;overflow:hidden'>
+<div style='position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,24,1,0.15),transparent 70%);border-radius:50%'></div>
+<div style='position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(39,244,210,0.1),transparent 70%);border-radius:50%'></div>
+<div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;letter-spacing:0.35em;color:#ff1801;text-transform:uppercase;margin-bottom:0.8rem'>2026 Season Intelligence Platform</div>
+<h1 style='font-family:Rajdhani;font-size:3.8rem;font-weight:700;background:linear-gradient(90deg,#ff1801,#ff8700,#27F4D2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;line-height:1.1'>FORMULA 1</h1>
+<div style='font-family:Rajdhani;font-size:1.6rem;font-weight:700;color:#fff;letter-spacing:0.15em;margin-top:0.3rem'>THE NEW ERA</div>
+<p style='color:#666;margin-top:1rem;font-size:0.95rem;max-width:500px;margin-left:auto;margin-right:auto'>AI-powered race predictions, Monte Carlo simulations, and real-time analytics for the most transformative season in motorsport history</p>
+</div>""", unsafe_allow_html=True)
 
-    # Countdown
-    days_left = (OPENING_RACE_DATE - date.today()).days
-    if days_left > 0:
-        weeks, days = divmod(days_left, 7)
-        st.markdown(f"""
-        <div class="countdown-box">
-            <div style='font-family:Rajdhani; font-size:0.8rem; color:#ff6b00; letter-spacing:0.15em; margin-bottom:0.8rem'>COUNTDOWN TO AUSTRALIAN GP &middot; MARCH 8</div>
-            <span class='countdown-num'>{weeks}</span><span class='countdown-label'>WKS</span>
-            <span class='countdown-num'>{days}</span><span class='countdown-label'>DAYS</span>
-        </div>
-        """, unsafe_allow_html=True)
-    else:
-        st.markdown("<div class='countdown-box' style='color:#00ff88; font-family:Rajdhani;'>THE 2026 F1 SEASON IS UNDERWAY!</div>", unsafe_allow_html=True)
+    # Live season status bar
+    today_ts = pd.Timestamp(date.today())
+    cal_df = pd.DataFrame(CALENDAR_2026)
+    cal_df["date"] = pd.to_datetime(cal_df["date"])
+    completed = cal_df[cal_df["date"] < today_ts]
+    upcoming = cal_df[cal_df["date"] >= today_ts]
+    races_done = len(completed)
+    races_total = len(cal_df)
+    progress_pct = (races_done / races_total) * 100
 
-    st.markdown("")
+    next_race = upcoming.iloc[0] if not upcoming.empty else None
+    if next_race is not None:
+        nr_days = (next_race["date"] - today_ts).days
+        nr_flag = flag_pill(next_race["flag"], "#888")
+        ct_color_map = {"power":"#ff6b00","high_speed":"#ff1e00","street":"#FF87BC","technical":"#27F4D2","balanced":"#aaa"}
+        nr_ct_color = ct_color_map.get(next_race["circuit_type"], "#888")
+        sprint_tag = "<span style='background:linear-gradient(90deg,#9b30ff,#6600cc);color:#fff;font-size:0.5rem;font-weight:800;padding:0.1rem 0.35rem;border-radius:4px;margin-left:0.4rem;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
 
-    # Stats row
+        st.markdown(f"""<div style='background:rgba(12,12,22,0.9);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap'>
+<div style='flex:1;min-width:200px'>
+<div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;margin-bottom:0.4rem'>Next Race</div>
+<div style='display:flex;align-items:center;gap:0.5rem'>
+{nr_flag}
+<span style='font-family:Rajdhani;font-size:1.2rem;font-weight:700;color:#fff'>{next_race["name"]}{sprint_tag}</span>
+</div>
+<div style='font-size:0.75rem;color:#555;margin-top:0.2rem'>{next_race["circuit"]} &middot; <span style='color:{nr_ct_color}'>{next_race["circuit_type"].replace("_"," ").title()}</span></div>
+</div>
+<div style='display:flex;gap:1.2rem;align-items:center'>
+<div style='text-align:center'>
+<div style='font-family:Rajdhani;font-size:2.4rem;font-weight:700;color:#ff1801;line-height:1'>{nr_days}</div>
+<div style='font-size:0.55rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Days Away</div>
+</div>
+<div style='width:1px;height:40px;background:rgba(255,255,255,0.06)'></div>
+<div style='text-align:center'>
+<div style='font-family:Rajdhani;font-size:2.4rem;font-weight:700;color:#27F4D2;line-height:1'>{races_done}/{races_total}</div>
+<div style='font-size:0.55rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Races Done</div>
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
+
+    # Season progress bar
+    st.markdown(f"""<div style='margin-bottom:2rem'>
+<div style='display:flex;justify-content:space-between;margin-bottom:0.4rem'>
+<span style='font-size:0.65rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Season Progress</span>
+<span style='font-size:0.65rem;color:#ff1801;font-weight:700'>{progress_pct:.0f}%</span>
+</div>
+<div style='width:100%;height:4px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden'>
+<div style='width:{progress_pct}%;height:100%;background:linear-gradient(90deg,#ff1801,#ff8700);border-radius:4px;transition:width 0.8s'></div>
+</div>
+</div>""", unsafe_allow_html=True)
+
+    # Stats grid - 2 rows with metric cards
     st.markdown("<div class='section-header'>2026 SEASON AT A GLANCE</div>", unsafe_allow_html=True)
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4 = st.columns(4)
     stats = [
-        ("22", "Drivers"), ("11", "Teams"), ("24", "Races"),
-        ("6", "Sprint Rounds"), ("50/50", "Hybrid Split"),
+        ("22", "Drivers", "#ff1801", "user"),
+        ("11", "Constructors", "#ff8700", "flag"),
+        ("24", "Grand Prix", "#27F4D2", "calendar"),
+        ("6", "Sprint Rounds", "#9b30ff", "zap"),
     ]
-    for col, (val, label) in zip([c1,c2,c3,c4,c5], stats):
-        col.markdown(f"<div class='metric-card'><div class='val'>{val}</div><div class='label'>{label}</div></div>", unsafe_allow_html=True)
+    for col, (val, label, color, icon) in zip([c1,c2,c3,c4], stats):
+        col.markdown(f"""<div style='background:rgba(12,12,22,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:1.3rem 1rem;text-align:center;transition:all 0.3s'>
+<div style='margin-bottom:0.5rem'>{get_icon(icon, 24, color)}</div>
+<div style='font-family:Rajdhani;font-size:2.6rem;font-weight:700;color:{color};line-height:1'>{val}</div>
+<div style='font-size:0.65rem;color:#555;text-transform:uppercase;letter-spacing:0.12em;margin-top:0.3rem'>{label}</div>
+</div>""", unsafe_allow_html=True)
 
     # Regulation highlights
     st.markdown(f"<div class='section-header'>{get_icon('settings', 18, '#ff6b00')} THE NEW ERA — 2026 REGULATIONS</div>", unsafe_allow_html=True)
     r1, r2, r3, r4 = st.columns(4)
     regs = [
-        ("zap", "Active Aerodynamics", "Movable front & rear wings. X-Mode on straights, Z-Mode in corners — replacing DRS entirely."),
-        ("zap", "350kW MGU-K", "Near 3× increase in electrical output. 50/50 split between ICE and ERS — a true hybrid formula."),
-        ("zap", "Overtake Mode", "Within 1s of the car ahead? Deploy 0.5MJ extra energy. No more DRS trains."),
-        ("zap", "30kg Lighter", "Shorter wheelbase, narrower tires, simplified aero. Nimbler, more agile racing cars."),
+        ("zap", "Active Aero", "Movable front & rear wings. X-Mode on straights, Z-Mode in corners — replacing DRS.", "#ff6b00"),
+        ("zap", "350kW MGU-K", "Near 3x increase in electrical output. True 50/50 hybrid split between ICE and ERS.", "#27F4D2"),
+        ("zap", "Overtake Mode", "Within 1s of the car ahead? Deploy 0.5MJ extra energy burst. No more DRS trains.", "#ff1801"),
+        ("zap", "30kg Lighter", "Shorter wheelbase, narrower tires, simplified aero. Nimbler, more agile racing.", "#9b30ff"),
     ]
-    for col, (icon_name, title, desc) in zip([r1,r2,r3,r4], regs):
-        col.markdown(f"<div class='reg-card'><div class='reg-icon'>{get_icon(icon_name, 32, '#ff6b00')}</div><h4>{title}</h4><p>{desc}</p></div>", unsafe_allow_html=True)
+    for col, (icon_name, title, desc, accent) in zip([r1,r2,r3,r4], regs):
+        col.markdown(f"""<div style='background:rgba(12,12,22,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:1.3rem 1rem;height:100%;transition:all 0.3s'>
+<div style='margin-bottom:0.6rem'>{get_icon(icon_name, 28, accent)}</div>
+<div style='font-family:Rajdhani;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.4rem'>{title}</div>
+<div style='font-size:0.75rem;color:#666;line-height:1.5'>{desc}</div>
+</div>""", unsafe_allow_html=True)
 
-    # New teams
-    st.markdown(f"<div class='section-header'>{get_icon('sparkles', 18, '#ff1e00')} THE CLASS OF 2026</div>", unsafe_allow_html=True)
-    n1, n2, n3 = st.columns(3)
-    with n1:
-        st.markdown("""
-        <div class='driver-card' style='border-color:#9B000055'>
-            <div style='color:#9B0000; font-family:Rajdhani; font-weight:700'>AUDI FORMULA RACING</div>
-            <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Nico Hülkenberg · Gabriel Bortoleto</div>
-            <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>Power Unit: Audi · First works entry in F1</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with n2:
-        st.markdown("""
-        <div class='driver-card' style='border-color:#00308755'>
-            <div style='color:#003087; font-family:Rajdhani; font-weight:700'>CADILLAC FORMULA RACING</div>
-            <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Sergio Pérez · Valtteri Bottas</div>
-            <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>Power Unit: Ferrari · First US works team</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with n3:
-        st.markdown(f"""
-        <div class='driver-card' style='border-color:#ff1e0055'>
-            <div style='color:#ff6b00; font-family:Rajdhani; font-weight:700'>DEFENDING CHAMPION</div>
-            <div style='font-size:0.85rem; color:#ccc; margin-top:0.3rem'>Lando Norris &middot; McLaren (2025 WDC)</div>
-            <div style='font-size:0.75rem; color:#888; margin-top:0.2rem'>McLaren also won 2025 Constructors' Championship</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # Team grid
+    # Constructor lineup — grouped horizontal bars with team colors
     st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1801')} CONSTRUCTOR LINEUP</div>", unsafe_allow_html=True)
-    team_data = []
-    for info in DRIVERS_2026:
-        team_data.append({"team": info["team"], "driver": info["name"], "code": info["code"]})
-    team_df = pd.DataFrame(team_data)
-    teams_grouped = team_df.groupby("team")["driver"].apply(lambda x: " & ".join(x)).reset_index()
 
-    fig = go.Figure()
-    for i, row in teams_grouped.iterrows():
-        color = TEAM_COLORS_HEX.get(row["team"], "#888")
-        fig.add_trace(go.Bar(
-            x=[row["team"]], y=[1], name=row["team"], marker_color=color,
-            text=[row["driver"]], textposition="inside",
-            hovertemplate=f"<b>{row['team']}</b><br>{row['driver']}<extra></extra>",
-        ))
-    fig.update_layout(
-        showlegend=False, barmode="stack", xaxis_tickangle=-30, height=280,
-        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Space Grotesk", color="#aaa"),
-        margin=dict(t=10, b=80, l=20, r=20),
-        yaxis=dict(showticklabels=False, showgrid=False),
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    teams_sorted = sorted(TEAM_CAR_RATINGS.keys(), key=lambda t: sum(TEAM_CAR_RATINGS[t].values())/len(TEAM_CAR_RATINGS[t].values()), reverse=True)
+    
+    for team in teams_sorted:
+        color = TEAM_COLORS_HEX.get(team, "#888")
+        drivers = [d for d in DRIVERS_2026 if d["team"] == team]
+        driver_names = " & ".join([d["name"] for d in drivers])
+        driver_codes = " | ".join([d["code"] for d in drivers])
+        overall = sum(TEAM_CAR_RATINGS[team].values()) / len(TEAM_CAR_RATINGS[team].values())
+        bar_width = (overall / 10) * 100
+        pu = POWER_UNITS.get(team, "")
+
+        st.markdown(f"""<div style='display:flex;align-items:center;gap:1rem;padding:0.55rem 0.8rem;margin-bottom:0.35rem;background:rgba(12,12,22,0.6);border:1px solid rgba(255,255,255,0.04);border-radius:12px;border-left:4px solid {color}'>
+<div style='min-width:140px'>
+<div style='font-family:Rajdhani;font-size:0.85rem;font-weight:700;color:{color}'>{team}</div>
+<div style='font-size:0.65rem;color:#555'>{driver_codes} &middot; {pu}</div>
+</div>
+<div style='flex:1;position:relative'>
+<div style='width:100%;height:22px;background:rgba(255,255,255,0.03);border-radius:6px;overflow:hidden'>
+<div style='width:{bar_width}%;height:100%;background:linear-gradient(90deg,{color}44,{color});border-radius:6px;display:flex;align-items:center;padding-left:0.5rem'>
+<span style='font-size:0.65rem;color:#fff;font-weight:700'>{driver_names}</span>
+</div>
+</div>
+</div>
+<div style='min-width:50px;text-align:right'>
+<span style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:{color}'>{overall:.1f}</span>
+<span style='font-size:0.5rem;color:#555'>/10</span>
+</div>
+</div>""", unsafe_allow_html=True)
+
+
+
+
+# ─── RACE ANALYSIS PAGE ──────────────────────────────────────────────────────
+def show_race_analysis(engine):
+    st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
+        <h1 style="font-size:1.8rem">{get_icon('layers', 28, '#ff1e00')} RACE ANALYSIS</h1>
+        <p>Detailed post-race breakdowns for concluded 2026 Grand Prix events</p>
+    </div>""", unsafe_allow_html=True)
+
+    today_ts = pd.Timestamp(date.today())
+    cal_df = pd.DataFrame(CALENDAR_2026)
+    cal_df["date"] = pd.to_datetime(cal_df["date"])
+    concluded = cal_df[cal_df["date"] < today_ts].sort_values("round", ascending=False)
+
+    if concluded.empty:
+        st.info("No races have been concluded yet. Check back after the first race!")
+        return
+
+    # Load live data
+    try:
+        from src.live_data import LiveDataIngestor
+        ingestor = LiveDataIngestor()
+        live_df = ingestor.load_cached_data()
+    except Exception:
+        live_df = pd.DataFrame()
+
+    if live_df.empty:
+        st.warning("No cached race results found. Click 'Initialize & Sync Live Data' in the sidebar to fetch actual results from the F1 API.")
+        return
+
+    # Race selector
+    concluded_names = concluded["name"].tolist()
+    selected_name = st.selectbox("Select Concluded Race", concluded_names)
+    race_info = next(r for r in CALENDAR_2026 if r["name"] == selected_name)
+    round_num = race_info["round"]
+    round_df = live_df[live_df["round"] == round_num].copy()
+
+    if round_df.empty:
+        st.info(f"No results data for {selected_name}. Try syncing live data.")
+        return
+
+    round_df = round_df.sort_values("finish_position")
+    country_name = COUNTRY_NAMES.get(race_info.get("flag",""), race_info["country"])
+    ct_color_map = {"power":"#ff6b00","high_speed":"#ff1e00","street":"#FF87BC","technical":"#27F4D2","balanced":"#aaa"}
+    ct_color = ct_color_map.get(race_info["circuit_type"], "#888")
+
+    # Race header
+    st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_name}</div><div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span> &middot; {race_info["laps"]} laps</div></div><div style='text-align:right'><div style='font-family:Rajdhani;font-size:0.7rem;color:#555;text-transform:uppercase'>Round {round_num}</div><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#00ff88'>COMPLETED</div></div></div>""", unsafe_allow_html=True)
+
+    # Actual podium
+    top3 = round_df.head(3)
+    st.markdown("<div class='section-header'>ACTUAL RACE PODIUM</div>", unsafe_allow_html=True)
+    _, p2c, p1c, p3c, _ = st.columns([0.5, 1, 1.2, 1, 0.5])
+
+    for col, iloc_idx, medal_cls, medal_label in [
+        (p2c, 1, "podium-p2", "P2"),
+        (p1c, 0, "podium-p1", "RACE WINNER"),
+        (p3c, 2, "podium-p3", "P3"),
+    ]:
+        if iloc_idx < len(top3):
+            d = top3.iloc[iloc_idx]
+            code = d["driver_code"]
+            drv_info = next((dr for dr in DRIVERS_2026 if dr["code"] == code), None)
+            tc = TEAM_COLORS.get(drv_info["team"], "#888") if drv_info else "#888"
+            name = drv_info["name"] if drv_info else code
+            team = drv_info["team"] if drv_info else ""
+            icon_color = "#FFD700" if iloc_idx == 0 else ("#C0C0C0" if iloc_idx == 1 else "#CD7F32")
+            big = iloc_idx == 0
+            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{code}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{name}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.65rem;font-weight:700'>{team}</div><p style='margin-top:0.5rem;font-size:0.75rem;color:#888'>P{int(d["finish_position"])} (Grid: P{int(d["grid_position"])})</p></div>""", unsafe_allow_html=True)
+
+    # Analysis tabs
+    tab1, tab2, tab3, tab4 = st.tabs(["Race Results", "Grid vs Finish", "Points Breakdown", "Prediction Accuracy"])
+
+    with tab1:
+        st.markdown("<div class='section-header'>FULL RACE CLASSIFICATION</div>", unsafe_allow_html=True)
+        disp = round_df[["driver_code", "finish_position", "grid_position", "points", "status"]].copy()
+        disp.columns = ["Driver", "Finish", "Grid", "Points", "Status"]
+        disp["Finish"] = disp["Finish"].astype(int)
+        disp["Grid"] = disp["Grid"].astype(int)
+        disp["Gain/Loss"] = disp["Grid"] - disp["Finish"]
+        st.dataframe(disp, use_container_width=True, hide_index=True)
+
+    with tab2:
+        st.markdown("<div class='section-header'>GRID POSITION vs FINISH POSITION</div>", unsafe_allow_html=True)
+        fig_gf = go.Figure()
+        for _, row in round_df.iterrows():
+            code = row["driver_code"]
+            drv = next((d for d in DRIVERS_2026 if d["code"] == code), None)
+            tc = TEAM_COLORS.get(drv["team"], "#888") if drv else "#888"
+            fig_gf.add_trace(go.Scatter(
+                x=[int(row["grid_position"])], y=[int(row["finish_position"])],
+                mode="markers+text", text=[code], textposition="top center",
+                marker=dict(size=12, color=tc, line=dict(width=1, color="#fff")),
+                showlegend=False,
+                hovertemplate=f"<b>{code}</b><br>Grid: P{int(row['grid_position'])}<br>Finish: P{int(row['finish_position'])}<extra></extra>"
+            ))
+        fig_gf.add_trace(go.Scatter(x=[1,22], y=[1,22], mode="lines", line=dict(dash="dash", color="rgba(255,255,255,0.12)", width=1), showlegend=False, hoverinfo="skip"))
+        dark_layout(fig_gf, "Grid vs Finish — Dots above line = positions gained", 450)
+        fig_gf.update_xaxes(title_text="Grid Position", dtick=2)
+        fig_gf.update_yaxes(title_text="Finish Position", autorange="reversed", dtick=2)
+        st.plotly_chart(fig_gf, use_container_width=True)
+
+    with tab3:
+        st.markdown("<div class='section-header'>POINTS SCORED</div>", unsafe_allow_html=True)
+        scorers = round_df[round_df["points"] > 0].copy()
+        if not scorers.empty:
+            colors = []
+            for _, r in scorers.iterrows():
+                drv = next((d for d in DRIVERS_2026 if d["code"] == r["driver_code"]), None)
+                colors.append(TEAM_COLORS.get(drv["team"], "#888") if drv else "#888")
+            fig_pts = go.Figure(go.Bar(
+                x=scorers["driver_code"], y=scorers["points"],
+                marker_color=colors,
+                text=[f"{int(p)}" for p in scorers["points"]],
+                textposition="outside",
+            ))
+            dark_layout(fig_pts, "Points Distribution", 380)
+            fig_pts.update_yaxes(title_text="Points")
+            st.plotly_chart(fig_pts, use_container_width=True)
+        else:
+            st.info("No points data available for this race.")
+
+        # DNF analysis
+        dnfs = round_df[round_df["dnf"] == 1]
+        if not dnfs.empty:
+            st.markdown("<div class='section-header'>RETIREMENTS (DNF)</div>", unsafe_allow_html=True)
+            for _, d in dnfs.iterrows():
+                drv = next((dr for dr in DRIVERS_2026 if dr["code"] == d["driver_code"]), None)
+                tc = TEAM_COLORS.get(drv["team"], "#888") if drv else "#888"
+                name = drv["name"] if drv else d["driver_code"]
+                st.markdown(f"""<div style='display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,30,0,0.08);border:1px solid rgba(255,30,0,0.15);border-radius:10px;padding:0.4rem 0.8rem;margin:0.2rem 0.3rem'><div style='width:8px;height:8px;border-radius:50%;background:#ff1e00'></div><span style='font-weight:700;color:{tc};font-size:0.8rem'>{d["driver_code"]}</span><span style='color:#888;font-size:0.75rem'>{name} — {d.get("status","DNF")}</span></div>""", unsafe_allow_html=True)
+
+    with tab4:
+        st.markdown("<div class='section-header'>MODEL PREDICTION vs ACTUAL</div>", unsafe_allow_html=True)
+        if not engine.is_trained:
+            st.warning("Train the model first to see prediction accuracy analysis.")
+        else:
+            with st.spinner("Running prediction for comparison..."):
+                _, mc_df = engine.predict_race(race_info["circuit"], include_monte_carlo=True, n_sims=2000)
+
+            comp_rows = []
+            for _, actual in round_df.iterrows():
+                code = actual["driver_code"]
+                pred_row = mc_df[mc_df["driver_code"] == code]
+                pred_pos = pred_row["expected_pos"].values[0] if not pred_row.empty else None
+                actual_pos = int(actual["finish_position"])
+                delta = round(pred_pos - actual_pos, 1) if pred_pos else None
+                comp_rows.append({
+                    "Driver": code,
+                    "Actual": actual_pos,
+                    "Predicted": round(pred_pos, 1) if pred_pos else "N/A",
+                    "Delta": f"{'+' if delta and delta > 0 else ''}{delta}" if delta else "N/A",
+                    "Status": actual.get("status", ""),
+                })
+            comp_df = pd.DataFrame(comp_rows).sort_values("Actual")
+
+            ac1, ac2 = st.columns([1.5, 1])
+            with ac1:
+                st.dataframe(comp_df, use_container_width=True, hide_index=True)
+
+            with ac2:
+                valid = comp_df[comp_df["Predicted"] != "N/A"].copy()
+                if not valid.empty:
+                    valid["Predicted"] = valid["Predicted"].astype(float)
+                    valid["Actual"] = valid["Actual"].astype(int)
+                    mae = abs(valid["Predicted"] - valid["Actual"]).mean()
+                    top5_actual = set(valid[valid["Actual"] <= 5]["Driver"])
+                    top5_pred_set = set(valid.nsmallest(5, "Predicted")["Driver"])
+                    overlap = len(top5_actual & top5_pred_set)
+                    within3 = (abs(valid["Predicted"] - valid["Actual"]) <= 3).mean() * 100
+                    accuracy_color = "#00ff88" if mae < 3 else "#ff6b00"
+                    st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:0.8rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>MAE</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>Top-5 Match</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:#9b30ff'>{within3:.0f}%</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>Within 3 Pos</div></div></div></div>""", unsafe_allow_html=True)
+
+            # Scatter
+            valid2 = comp_df[comp_df["Predicted"] != "N/A"].copy()
+            if not valid2.empty:
+                valid2["Predicted"] = valid2["Predicted"].astype(float)
+                valid2["Actual"] = valid2["Actual"].astype(int)
+                fig_comp = go.Figure()
+                for _, r in valid2.iterrows():
+                    tc = TEAM_COLORS.get(next((d["team"] for d in DRIVERS_2026 if d["code"] == r["Driver"]), ""), "#888")
+                    fig_comp.add_trace(go.Scatter(
+                        x=[r["Actual"]], y=[r["Predicted"]],
+                        mode="markers+text", text=[r["Driver"]], textposition="top center",
+                        marker=dict(size=12, color=tc, line=dict(width=1, color="#fff")),
+                        showlegend=False,
+                        hovertemplate=f"<b>{r['Driver']}</b><br>Actual: P{int(r['Actual'])}<br>Predicted: P{r['Predicted']:.1f}<extra></extra>"
+                    ))
+                fig_comp.add_trace(go.Scatter(x=[1,22], y=[1,22], mode="lines", line=dict(dash="dash", color="rgba(255,255,255,0.15)", width=1), showlegend=False, hoverinfo="skip"))
+                dark_layout(fig_comp, "Predicted vs Actual Finish", 420)
+                fig_comp.update_xaxes(title_text="Actual Position", dtick=2)
+                fig_comp.update_yaxes(title_text="Predicted Position", dtick=2)
+                st.plotly_chart(fig_comp, use_container_width=True)
+
 
 
 # ─── CALENDAR PAGE ───────────────────────────────────────────────────────────
@@ -1606,6 +1829,8 @@ def main():
         show_home()
     elif page == "2026 Calendar":
         show_calendar()
+    elif page == "Race Analysis":
+        show_race_analysis(engine)
     elif page == "Race Predictor":
         show_race_predictor(engine)
     elif page == "Season Simulator":
