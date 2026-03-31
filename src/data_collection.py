@@ -256,18 +256,71 @@ class F1DataCollector:
                         "real_podiums_2024": stats["podiums"],
                         "real_dnf_rate": stats["dnfs"] / max(stats["races"], 1),
                     })
+                    
+        df_hist = pd.DataFrame(rows)
+        
+        # Incorporate Live Data Integration (2026 data)
+        try:
+            from .live_data import LiveDataIngestor
+            ingestor = LiveDataIngestor(year=2026)
+            live_df = ingestor.load_cached_data()
+            if not live_df.empty:
+                live_rows = []
+                for _, lrow in live_df.iterrows():
+                    driver = next((d for d in self.drivers if d["code"] == lrow["driver_code"]), None)
+                    if not driver: continue
+                    
+                    circuit_type = "technical"
+                    for race in self.calendar:
+                        if race["round"] == lrow["round"]:
+                            circuit_type = race["circuit_type"]
+                            break
+                    
+                    is_street = 1 if circuit_type == "street" else 0
+                    grid_corr = GRID_FINISH_CORRELATION[circuit_type]
+                    team = driver["team"]
+                    car = TEAM_CAR_RATINGS.get(team, {})
+                    ct_mult = CIRCUIT_TYPE_MULTIPLIERS.get(team, {}).get(circuit_type, 1.0)
+                    stats = self._driver_2024_stats(driver["name"])
+                    
+                    live_rows.append({
+                        "year": lrow["year"], "circuit_idx": lrow["round"], "circuit_type": circuit_type,
+                        "driver_code": driver["code"], "driver_name": driver["name"], "team": team,
+                        "team_color": TEAM_COLORS.get(team, "#888"),
+                        "grid_position": lrow["grid_position"], "finish_position": lrow["finish_position"],
+                        "dnf": lrow["dnf"], "is_street": is_street,
+                        "driver_pace": driver["pace"], "driver_consistency": driver["consistency"],
+                        "driver_qualifying": driver["qualifying"], "driver_overtaking": driver["overtaking"],
+                        "driver_wet_skill": driver["wet_skill"], "driver_reg_adaptation": driver["reg_adaptation"],
+                        "car_speed": car.get("speed", 6), "car_reliability": car.get("reliability", 6),
+                        "car_aero": car.get("aero_efficiency", 6),
+                        "car_active_aero": car.get("active_aero_mastery", 6),
+                        "circuit_type_mult": ct_mult,
+                        "grid_finish_corr": grid_corr,
+                        "new_team": 1 if team in ("Audi", "Cadillac") else 0,
+                        "rookie": 1 if driver.get("rookie") else 0,
+                        "real_avg_finish_2024": stats["avg_finish"],
+                        "real_wins_2024": stats["wins"],
+                        "real_podiums_2024": stats["podiums"],
+                        "real_dnf_rate": stats["dnfs"] / max(stats["races"], 1),
+                    })
+                if live_rows:
+                    df_live = pd.DataFrame(live_rows)
+                    return pd.concat([df_hist, df_live], ignore_index=True)
+        except Exception as e:
+            print(f"Error loading live data: {e}")
 
-        return pd.DataFrame(rows)
+        return df_hist
 
     def get_race_features(self, circuit_name: str):
         """Get per-driver feature rows for a specific race/circuit."""
         # Find circuit type
         circuit_type = "technical"
-        flag = "🏁"
+        flag = "Flag"
         for race in self.calendar:
             if race["circuit"].lower() in circuit_name.lower() or circuit_name.lower() in race["circuit"].lower():
                 circuit_type = race["circuit_type"]
-                flag = race.get("flag", "🏁")
+                flag = race.get("flag", "Flag")
                 break
 
         is_street = 1 if circuit_type == "street" else 0

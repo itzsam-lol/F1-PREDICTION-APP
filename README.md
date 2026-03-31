@@ -1,4 +1,4 @@
-# 🏎️ F1 2026 — Season Intelligence Hub
+# F1 2026 — Season Intelligence Hub
 
 [![Python](https://img.shields.io/badge/Python-3.12%2B-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://streamlit.io/)
@@ -12,7 +12,7 @@ This project demonstrates expertise in **Predictive Modeling**, **Modular Softwa
 
 ---
 
-## 🚀 Core Features
+## Core Features
 - **ML Race Prediction Engine**: A Stacking Ensemble (XGBoost + GradientBoosting) trained on historical performance metrics, car efficiency ratings, and circuit-specific track fingerprints.
 - **Season Simulator**: Monte Carlo simulations to project Season Point totals, Constructors' standings, and Driver Championship probabilities.
 - **2026 New Era Dashboard**: An immersive Streamlit UI featuring:
@@ -24,7 +24,7 @@ This project demonstrates expertise in **Predictive Modeling**, **Modular Softwa
 
 ---
 
-## 🛠️ Tech Stack & Architecture
+## Tech Stack & Architecture
 
 ### Languages & Tools
 - **Frontend**: Streamlit (with Custom CSS/Glassmorphism & Orbitron typography)
@@ -48,7 +48,7 @@ f1-prediction-app/
 
 ---
 
-## 🏁 Installation & Setup
+## Installation & Setup
 
 ### 1. Configure Virtual Environment
 ```bash
@@ -74,14 +74,14 @@ streamlit run app.py
 
 ---
 
-## 📊 Methodology & Key Learnings
+## Methodology & Key Learnings
 - **Anchored Grounding**: To solve the issue of "predicting the future," the model uses 2024 real-world data as a performance baseline (Information Coefficient anchoring), then applies delta-adjustments for car development trajectories.
 - **Circuit Multipliers**: Implemented a weighted multiplier system where certain team architectures (e.g., Red Bull on Power tracks, Ferrari on Street tracks) influence the results based on historical dominance.
 - **Dynamic UX**: Leveraged SVG-path mapping to create custom "Circuit Fingerprints" that visually represent the DNA of each track directly in the UI.
 
 ---
 
-## 🔮 Future Scope
+## Future Scope
 - **Live Telemetry Integration**: Hooking into live FastF1 sessions once pre-season testing begins.
 - **Deep Learning Upgrade**: Implementing a Recurrent Neural Network (RNN) to model "In-Season Development" curves.
 - **Fantasy Integration**: Exporting predictions directly to F1 Fantasy league strategies.

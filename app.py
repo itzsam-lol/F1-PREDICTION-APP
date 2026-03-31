@@ -15,7 +15,6 @@ from src.data_collection import (
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="F1 2026 — Season Predictor",
-    page_icon=":racing_car:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -373,186 +372,60 @@ _NORMAL_WKD = [
     ("FRI", "Practice 2",          "#4a4a5a"),
     ("SAT", "Practice 3",          "#4a4a5a"),
     ("SAT", "Qualifying",          "#ff6b00"),
-    ("SUN", "Race  🏁",    "#ff1e00"),
+    ("SUN", "Race",                "#ff1e00"),
 ]
 _SPRINT_WKD = [
     ("FRI", "Practice 1",               "#4a4a5a"),
     ("FRI", "Sprint Qualifying",         "#9b30ff"),
-    ("SAT", "Sprint Race  🚀",   "#9b30ff"),
+    ("SAT", "Sprint Race",               "#9b30ff"),
     ("SAT", "Qualifying",               "#ff6b00"),
-    ("SUN", "Race  🏁",         "#ff1e00"),
+    ("SUN", "Race",                     "#ff1e00"),
 ]
 
 # --- TRACK SVG MAPS -------------------------------------------------------------------
 # Accurate circuit fingerprint SVGs -- each shaped like its real-world layout
-def get_track_svg(circuit_name: str, color: str = "#ff1e00") -> str:
-    paths = {
-        # Albert Park -- park circuit, square outer loop with inner chicane section
-        "Albert Park":
-            "M42,25 L150,25 Q164,25 164,42 L164,86 L140,86 Q128,86 128,100 "
-            "L128,116 Q128,130 114,132 L74,132 Q60,132 60,118 L60,100 "
-            "Q60,86 48,86 L28,86 L28,42 Q28,25 42,25 Z",
-        # Shanghai -- reverse-C outer loop, long back straight, hairpin
-        "Shanghai":
-            "M30,158 L30,30 Q30,14 52,14 L150,14 Q168,14 168,38 "
-            "L168,92 Q168,108 150,110 L96,110 L96,150 "
-            "Q96,164 78,166 L50,166 Q30,165 30,158 Z",
-        # Suzuka -- iconic figure-8 (crossing at Degner curve)
-        "Suzuka":
-            "M95,12 Q124,12 140,33 L150,59 Q156,80 143,97 L122,110 "
-            "Q108,118 95,116 Q82,118 68,110 L47,97 Q34,80 40,59 "
-            "L50,33 Q66,12 95,12 Z "
-            "M95,116 L95,144 Q95,157 105,162 L120,157 "
-            "Q126,149 124,137 L120,116",
-        # Bahrain -- rounded rectangular with three hairpin interruptions
-        "Bahrain":
-            "M38,28 Q38,11 63,11 L130,11 Q157,11 157,38 "
-            "L157,145 Q157,168 130,168 L63,168 "
-            "Q38,168 38,145 L38,96 L62,96 L62,80 L38,80 Z",
-        # Jeddah -- very long thin fast street circuit
-        "Jeddah":
-            "M34,170 L34,27 Q34,11 52,11 L80,11 Q97,11 99,28 "
-            "L99,66 Q99,81 88,85 L67,89 Q57,93 59,104 "
-            "L68,122 Q79,140 102,142 L142,138 Q162,132 163,116 "
-            "L163,170 Q161,180 145,180 L49,180 Q34,178 34,170 Z",
-        # Miami -- modern loop around Hard Rock Stadium
-        "Miami":
-            "M28,64 L28,28 Q28,11 48,11 L150,11 Q167,11 167,32 "
-            "L167,80 L138,98 L138,134 Q138,157 117,160 "
-            "L57,160 Q28,158 28,135 Z",
-        # Imola -- narrow classic with Acque Minerali chicane
-        "Imola":
-            "M78,17 Q113,9 134,36 L144,70 Q150,94 137,118 "
-            "L114,140 Q87,157 64,142 L42,113 Q30,87 41,61 "
-            "L54,35 Q66,17 78,17 Z "
-            "M88,150 L88,170 Q88,178 99,178 L110,174 "
-            "Q117,165 114,154 L110,146",
-        # Monaco -- famously tight hillside street circuit
-        "Monaco":
-            "M88,14 Q121,10 140,33 L149,57 Q151,77 139,88 "
-            "L115,98 Q91,106 67,97 L49,79 Q41,60 48,40 "
-            "Q60,14 88,14 Z",
-        # Barcelona -- balanced layout, long back straight
-        "Barcelona":
-            "M30,74 L30,27 Q30,11 55,11 L150,11 Q170,11 170,38 "
-            "L170,80 L140,98 L140,140 Q140,162 115,164 "
-            "L57,164 Q30,162 30,140 Z",
-        # Montreal -- Gilles Villeneuve island hairpin circuit
-        "Montreal":
-            "M30,164 L30,24 Q30,9 52,9 L87,9 Q104,9 104,30 "
-            "L104,84 L150,84 Q168,84 168,104 L168,147 "
-            "Q168,167 147,170 L49,170 Q30,167 30,164 Z",
-        # Red Bull Ring -- short hilly Austrian circuit
-        "Red Bull Ring":
-            "M57,154 L28,80 Q22,49 53,28 L93,15 Q128,7 152,36 "
-            "L164,75 L136,130 Q118,164 92,166 Q72,166 57,154 Z",
-        # Silverstone -- ultra-fast British wing shape
-        "Silverstone":
-            "M28,59 L28,27 Q28,10 60,10 L152,10 Q176,10 178,38 "
-            "L178,84 Q178,112 152,118 L118,122 L118,150 "
-            "Q118,166 97,169 L54,169 Q28,166 28,142 Z",
-        # Hungaroring -- twisty stadium-style circuit
-        "Hungaroring":
-            "M54,154 L36,88 Q28,55 54,35 L93,17 Q128,7 155,34 "
-            "L164,72 Q172,105 152,130 L119,150 "
-            "Q90,166 54,154 Z",
-        # Spa-Francorchamps -- triangular layout: Raidillon, Kemmel, Bus Stop
-        "Spa":
-            "M28,84 L28,27 Q28,11 54,11 L82,11 L82,46 "
-            "Q82,61 108,68 L150,72 Q172,75 172,102 "
-            "L172,147 Q172,170 146,170 L91,170 "
-            "Q67,170 62,147 L58,119 Q53,100 33,99 Z",
-        # Zandvoort -- banked Tarzanbocht hairpin circuit
-        "Zandvoort":
-            "M82,11 Q120,7 137,30 Q152,53 148,82 "
-            "L137,114 Q121,140 95,150 L61,150 "
-            "Q34,142 24,114 L22,82 Q26,35 82,11 Z",
-        # Monza -- Temple of Speed: oval with two chicane breaks
-        "Monza":
-            "M28,84 L28,27 Q28,9 56,9 L140,9 Q164,9 164,29 "
-            "L164,84 Q164,138 140,150 L120,154 L120,114 "
-            "L52,114 L52,154 L33,150 Q28,138 28,84 Z",
-        # Baku -- Corniche straight + winding castle section
-        "Baku":
-            "M28,167 L28,24 Q28,9 50,9 L76,9 Q94,9 97,30 "
-            "L97,90 Q97,105 114,108 L154,108 "
-            "Q170,108 170,128 L170,167 "
-            "Q168,180 150,180 L46,180 Q28,178 28,167 Z",
-        # Singapore -- dense night circuit, 90-degree corners
-        "Singapore":
-            "M28,82 L28,34 Q28,14 55,14 L83,14 L83,58 "
-            "L120,58 L120,14 L150,14 Q167,14 169,42 "
-            "L169,94 Q169,120 144,124 L102,127 "
-            "L102,164 Q100,178 82,180 L49,180 "
-            "Q28,177 28,150 Z",
-        # Austin (COTA) -- blind-crest T1, esses, stadium section
-        "Austin":
-            "M54,157 L31,82 Q24,46 54,26 L97,13 "
-            "Q134,5 157,35 L166,78 L138,105 "
-            "L138,142 Q138,164 112,167 "
-            "L78,170 Q54,167 54,157 Z",
-        # Mexico City -- highest altitude, massive straight
-        "Mexico City":
-            "M30,86 L30,29 Q30,11 60,11 L140,11 "
-            "Q164,11 164,36 L164,90 L150,114 "
-            "Q150,138 138,140 L62,140 "
-            "Q30,134 30,102 Z",
-        # Interlagos -- anti-clockwise, Senna S first corner
-        "Interlagos":
-            "M75,17 Q112,9 138,36 L151,70 Q160,98 143,120 "
-            "L111,138 Q84,150 57,134 L35,103 "
-            "Q24,76 38,49 Q54,24 75,17 Z",
-        # Las Vegas -- Strip circuit: two mega straights + inner hairpin link
-        "Las Vegas":
-            "M28,40 L28,17 Q28,7 50,7 L160,7 "
-            "Q178,7 178,24 L178,164 "
-            "Q178,180 160,180 L50,180 "
-            "Q28,177 28,157 L28,124 "
-            "L93,124 L93,76 L28,76 Z",
-        # Lusail -- high-speed flowing Qatari circuit
-        "Lusail":
-            "M84,17 Q122,9 148,36 L162,73 "
-            "Q170,104 151,130 L118,148 "
-            "Q88,160 61,140 L39,109 "
-            "Q27,79 40,52 Q56,23 84,17 Z",
-        # Yas Marina -- Abu Dhabi season finale
-        "Yas Marina":
-            "M28,62 L28,23 Q28,9 55,9 L140,9 "
-            "Q168,9 170,36 L170,84 "
-            "Q170,115 144,120 L102,124 "
-            "L102,150 Q102,165 82,168 "
-            "L49,168 Q28,165 28,146 Z",
-    }
+import base64
+import os
 
-    cid = circuit_name.replace(" ", "").replace(".", "")
-    path = paths.get(circuit_name, "M45,45 L160,45 L160,155 L45,155 Z")
-    return f"""
-    <svg viewBox="0 0 200 195" xmlns="http://www.w3.org/2000/svg"
-         style="width:100%;max-width:340px;filter:drop-shadow(0 0 16px {color}44)">
-        <defs>
-            <filter id="glo{cid}" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="3.5" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <linearGradient id="tg{cid}" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:{color};stop-opacity:1"/>
-                <stop offset="100%" style="stop-color:{color}88;stop-opacity:1"/>
-            </linearGradient>
-        </defs>
-        <rect width="200" height="195" fill="#06060e" rx="14"/>
-        <path d="{path}" fill="none" stroke="{color}12" stroke-width="16"
-              stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="{path}" fill="none" stroke="{color}28" stroke-width="10"
-              stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="{path}" fill="none" stroke="#111122" stroke-width="5.5"
-              stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="{path}" fill="none" stroke="url(#tg{cid})" stroke-width="2.8"
-              stroke-linecap="round" stroke-linejoin="round"
-              filter="url(#glo{cid})" opacity="0.95"/>
-        <rect x="34" y="18" width="14" height="5" rx="2" fill="{color}" opacity="0.9"/>
-        <text x="52" y="24" font-size="6.5" fill="{color}" font-family="monospace"
-              font-weight="bold" letter-spacing="0.5" opacity="0.75">S/F</text>
-    </svg>"""
+def get_track_svg(circuit_name: str, color: str = "#ff1e00") -> str:
+    mapping = {
+        "Albert Park": "albert_park.webp",
+        "Shanghai": "shanghai.webp",
+        "Suzuka": "suzuka.webp",
+        "Bahrain": "bahrain.webp",
+        "Jeddah": "jeddah.webp",
+        "Miami": "miami.webp",
+        "Imola": "madrid.webp", # Imola -> Madrid fallback
+        "Monaco": "monaco.webp",
+        "Barcelona": "catalunya.webp",
+        "Montreal": "villeneuve.webp",
+        "Red Bull Ring": "red_bull_ring.webp",
+        "Silverstone": "silverstone.webp",
+        "Hungaroring": "hungaroring.webp",
+        "Spa": "spa.webp",
+        "Zandvoort": "zandvoort.webp",
+        "Monza": "monza.webp",
+        "Baku": "baku.webp",
+        "Singapore": "marina_bay.webp",
+        "Austin": "americas.webp",
+        "Mexico City": "rodriguez.webp",
+        "Interlagos": "interlagos.webp",
+        "Las Vegas": "vegas.webp",
+        "Lusail": "losail.webp",
+        "Yas Marina": "yas_marina.webp"
+    }
+    
+    filename = mapping.get(circuit_name)
+    if not filename:
+        return f"<div style='color:{color};text-align:center;'>Image not found</div>"
+    
+    path = os.path.join("data", "maps", filename)
+    try:
+        with open(path, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode("utf-8")
+        return f'<img src="data:image/webp;base64,{encoded}" style="width:100%;max-width:340px;filter:drop-shadow(0 0 16px {color}44)" alt="{circuit_name}"/>'
+    except Exception as e:
+        return f"<!-- Error loading image {path}: {e} -->"
 
 
 
@@ -695,8 +568,11 @@ def render_sidebar(engine):
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button("Initialize Model", use_container_width=True):
-                with st.spinner("Training Stacking Ensemble..."):
+            if st.button("Initialize & Sync Live Data", use_container_width=True):
+                with st.spinner("Fetching Live Data (may take a moment) & Training..."):
+                    from src.live_data import LiveDataIngestor
+                    ingestor = LiveDataIngestor(year=2026)
+                    ingestor.fetch_latest_data()
                     engine.quick_demo_train()
                 st.rerun()
         else:

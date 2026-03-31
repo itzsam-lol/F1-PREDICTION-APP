@@ -1,0 +1,8 @@
+circuits = [
+"Albert Park", "Shanghai", "Suzuka", "Bahrain", "Jeddah", "Miami", "Imola", "Monaco", "Barcelona", "Montreal", "Red Bull Ring", "Silverstone", "Hungaroring", "Spa", "Zandvoort", "Monza", "Baku", "Singapore", "Austin", "Mexico City", "Interlagos", "Las Vegas", "Lusail", "Yas Marina"
+]
+images = [
+"albert_park.webp", "americas.webp", "bahrain.webp", "baku.webp", "catalunya.webp", "hungaroring.webp", "interlagos.webp", "jeddah.webp", "losail.webp", "madrid.webp", "marina_bay.webp", "miami.webp", "monaco.webp", "monza.webp", "red_bull_ring.webp", "rodriguez.webp", "shanghai.webp", "silverstone.webp", "spa.webp", "suzuka.webp", "vegas.webp", "villeneuve.webp", "yas_marina.webp", "zandvoort.webp"
+]
+# We'll just map them logically.
+print("Done")
