@@ -465,12 +465,7 @@ def render_sidebar(engine):
 
         st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
 
-        # ── Navigation label ─────────────────────────────────────────────────
-        st.markdown("""
-        <div style='font-size:0.55rem; color:#2a2a3a; text-transform:uppercase;
-                    letter-spacing:0.18em; padding:0 0.2rem 0.35rem 0.2rem; font-weight:700'>
-            Navigation
-        </div>""", unsafe_allow_html=True)
+        st.markdown("<div style='height:0.6rem'></div>", unsafe_allow_html=True)
 
         # Nav items: (label, icon_name)
         NAV_ITEMS = [
@@ -484,7 +479,7 @@ def render_sidebar(engine):
         nav_labels = [k for k, _ in NAV_ITEMS]
 
         page_idx = st.radio(
-            "nav", nav_labels, label_visibility="collapsed", index=0
+            "Select Page", nav_labels, label_visibility="collapsed", index=0
         )
         page_choice = page_idx   # already the plain key
 
@@ -687,40 +682,27 @@ def show_home():
         """, unsafe_allow_html=True)
 
     # Team grid
-    st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1801')} CONSTRUCTOR PERFORMANCE 3D SPACE</div>", unsafe_allow_html=True)
-    
-    # 3D plot mapping Speed, Aero, and Reliability
+    st.markdown(f"<div class='section-header'>{get_icon('flag', 18, '#ff1801')} CONSTRUCTOR LINEUP</div>", unsafe_allow_html=True)
+    team_data = []
+    for info in DRIVERS_2026:
+        team_data.append({"team": info["team"], "driver": info["name"], "code": info["code"]})
+    team_df = pd.DataFrame(team_data)
+    teams_grouped = team_df.groupby("team")["driver"].apply(lambda x: " & ".join(x)).reset_index()
+
     fig = go.Figure()
-    for team, stats in TEAM_CAR_RATINGS.items():
-        color = TEAM_COLORS_HEX.get(team, "#888")
-        # find drivers for this team
-        drivers = [d["name"] for d in DRIVERS_2026 if d["team"] == team]
-        driver_text = "<br>".join(drivers)
-        fig.add_trace(go.Scatter3d(
-            x=[stats.get("speed", 5)],
-            y=[stats.get("aero_efficiency", 5)],
-            z=[stats.get("reliability", 5)],
-            mode="markers+text",
-            name=team,
-            text=[f"<b>{team}</b>"],
-            textposition="top center",
-            textfont=dict(color=color, size=12, family="Rajdhani"),
-            marker=dict(size=14, color=color, opacity=0.8, line=dict(width=2, color="#fff")),
-            hovertemplate=f"<b>{team}</b><br>{driver_text}<br>Speed: %{{x}}<br>Aero: %{{y}}<br>Reliability: %{{z}}<extra></extra>"
+    for i, row in teams_grouped.iterrows():
+        color = TEAM_COLORS_HEX.get(row["team"], "#888")
+        fig.add_trace(go.Bar(
+            x=[row["team"]], y=[1], name=row["team"], marker_color=color,
+            text=[row["driver"]], textposition="inside",
+            hovertemplate=f"<b>{row['team']}</b><br>{row['driver']}<extra></extra>",
         ))
-    
     fig.update_layout(
-        scene=dict(
-            xaxis=dict(title="Top Speed", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
-            yaxis=dict(title="Aero Efficiency", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
-            zaxis=dict(title="Reliability", range=[5,10], backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
-            bgcolor="rgba(0,0,0,0)"
-        ),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        height=500,
-        margin=dict(l=0, r=0, b=0, t=0),
-        showlegend=False
+        showlegend=False, barmode="stack", xaxis_tickangle=-30, height=280,
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Space Grotesk", color="#aaa"),
+        margin=dict(t=10, b=80, l=20, r=20),
+        yaxis=dict(showticklabels=False, showgrid=False),
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -1060,18 +1042,7 @@ def show_race_predictor(engine):
         }.get(race_info["circuit_type"], "#888")
         sprint_badge = "<span class='race-sprint-badge'>SPRINT WEEKEND</span>" if race_info["sprint"] else ""
 
-        st.markdown(f"""
-        <div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;
-                    border-radius:20px;padding:1.5rem 2rem;margin-bottom:2rem;
-                    display:flex;gap:1.5rem;align-items:center'>
-            <div style='flex:1'>
-                <div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div>
-                <div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot;
-                <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>
-                {sprint_badge}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div><div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>{sprint_badge}</div></div>""", unsafe_allow_html=True)
 
         # Podium ceremony
         top3 = mc_df.head(3)
@@ -1087,19 +1058,7 @@ def show_race_predictor(engine):
             tc = d["team_color"]
             big = idx == 0
             icon_color = "#FFD700" if idx == 0 else ("#C0C0C0" if idx == 1 else "#CD7F32")
-            col.markdown(f"""
-            <div class='{medal_cls}'>
-                <div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div>
-                <div style='font-family:Rajdhani; font-size:0.7rem; font-weight:700; color:{icon_color}; margin-bottom:0.4rem'>{medal_label}</div>
-                <h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{d["driver_code"]}</h2>
-                <p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>
-                    {d["driver_name"]}</p>
-                <div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;
-                    border-radius:6px;font-size:0.65rem;font-weight:700'>{d["team"]}</div>
-                <p style='margin-top:0.8rem;font-size:{"1.1rem" if big else "0.9rem"}'>
-                    Win <b>{d["win_prob"]:.1%}</b></p>
-            </div>
-            """, unsafe_allow_html=True)
+            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{d["driver_code"]}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{d["driver_name"]}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.65rem;font-weight:700'>{d["team"]}</div><p style='margin-top:0.8rem;font-size:{"1.1rem" if big else "0.9rem"}'>Win <b>{d["win_prob"]:.1%}</b></p></div>""", unsafe_allow_html=True)
 
         # Win probability chart
         st.markdown("<div class='section-header'>WIN PROBABILITY</div>", unsafe_allow_html=True)
@@ -1116,8 +1075,63 @@ def show_race_predictor(engine):
         fig.update_yaxes(title_text="Probability (%)")
         st.plotly_chart(fig, use_container_width=True)
 
+        # ── 3D Monte Carlo Probability Surface ────────────────────────────
+        st.markdown("<div class='section-header'>3D MONTE CARLO SIMULATION LANDSCAPE</div>", unsafe_allow_html=True)
+        top10_mc = mc_df.head(10)
+        prob_cols = ["win_prob", "podium_prob", "top5_prob", "top10_prob"]
+        prob_labels = ["Win", "Podium", "Top 5", "Points"]
+        z_surface = (top10_mc[prob_cols].values * 100)
+        driver_labels = top10_mc["driver_code"].tolist()
+        team_colors_list = top10_mc["team_color"].tolist()
+
+        fig_3d = go.Figure()
+        fig_3d.add_trace(go.Surface(
+            z=z_surface,
+            x=list(range(len(prob_labels))),
+            y=list(range(len(driver_labels))),
+            colorscale=[[0, "#0a0a1a"], [0.25, "#1a0a2e"], [0.5, "#ff6b00"], [0.75, "#ff3300"], [1, "#ff1801"]],
+            opacity=0.85,
+            showscale=False,
+            hovertemplate="Driver: %{text}<br>Category: %{customdata}<br>Probability: %{z:.1f}%<extra></extra>",
+            text=[[d]*len(prob_labels) for d in driver_labels],
+            customdata=[[p for p in prob_labels]]*len(driver_labels),
+        ))
+        for i, (code, tc) in enumerate(zip(driver_labels, team_colors_list)):
+            for j, pl in enumerate(prob_labels):
+                fig_3d.add_trace(go.Scatter3d(
+                    x=[j], y=[i], z=[z_surface[i][j]],
+                    mode='markers',
+                    marker=dict(size=5, color=tc, line=dict(width=1, color='#fff')),
+                    showlegend=False,
+                    hovertemplate=f"<b>{code}</b><br>{pl}: {z_surface[i][j]:.1f}%<extra></extra>"
+                ))
+        fig_3d.update_layout(
+            scene=dict(
+                xaxis=dict(title="Probability Tier", tickvals=list(range(len(prob_labels))), ticktext=prob_labels, backgroundcolor="rgba(0,0,0,0)", gridcolor="#222"),
+                yaxis=dict(title="Driver", tickvals=list(range(len(driver_labels))), ticktext=driver_labels, backgroundcolor="rgba(0,0,0,0)", gridcolor="#222"),
+                zaxis=dict(title="Probability (%)", backgroundcolor="rgba(0,0,0,0)", gridcolor="#222"),
+                bgcolor="rgba(0,0,0,0)",
+                camera=dict(eye=dict(x=1.8, y=-1.8, z=1.2)),
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
+            height=550,
+            margin=dict(l=0, r=0, b=0, t=10),
+        )
+        st.plotly_chart(fig_3d, use_container_width=True)
+
+        # Generate lap data if needed
+        lap_df = None
+        if show_laps:
+            with st.spinner("Generating lap trace..."):
+                if "predicted_pos" not in det_df.columns and "expected_pos" in mc_df.columns:
+                    sim_input = mc_df.copy()
+                    sim_input["predicted_pos"] = sim_input["expected_pos"].round().astype(int)
+                else:
+                    sim_input = det_df
+                lap_df = engine.generate_lap_simulation(sim_input, n_laps=race_info.get("laps", 57))
+
         # Tabs
-        tab1, tab2, tab3, tab4 = st.tabs(["Full Grid", "Lap-by-Lap Trace", "Position Heatmap", "3D Monte Carlo Trace"])
+        tab1, tab2, tab3, tab4 = st.tabs(["Full Grid", "Lap-by-Lap Trace", "Position Heatmap", "3D Race Trajectory"])
 
         with tab1:
             disp_cols = ["driver_code", "driver_name", "team", "expected_pos",
@@ -1134,18 +1148,9 @@ def show_race_predictor(engine):
             st.dataframe(tbl, use_container_width=True, hide_index=True)
 
         with tab2:
-            if show_laps:
-                with st.spinner("Generating lap trace..."):
-                    if "predicted_pos" not in det_df.columns and "expected_pos" in mc_df.columns:
-                        sim_input = mc_df.copy()
-                        sim_input["predicted_pos"] = sim_input["expected_pos"].round().astype(int)
-                    else:
-                        sim_input = det_df
-                    lap_df = engine.generate_lap_simulation(sim_input, n_laps=57)
-
+            if show_laps and lap_df is not None:
                 top12_codes = mc_df.head(12)["driver_code"].tolist()
                 lap_top = lap_df[lap_df["driver_code"].isin(top12_codes)]
-
                 fig2 = go.Figure()
                 for code in top12_codes:
                     sub = lap_top[lap_top["driver_code"] == code]
@@ -1155,7 +1160,7 @@ def show_race_predictor(engine):
                     fig2.add_trace(go.Scatter(
                         x=sub["lap"], y=sub["position"], mode="lines", name=code,
                         line=dict(color=tc, width=2.5),
-                        hovertemplate=f"<b>{code}</b> — Lap %{{x}}: P%{{y:.0f}}<extra></extra>",
+                        hovertemplate=f"<b>{code}</b> Lap %{{x}}: P%{{y:.0f}}<extra></extra>",
                     ))
                 dark_layout(fig2, "Lap-by-Lap Position Trace (Top 12)", 500)
                 fig2.update_yaxes(autorange="reversed", title_text="Position", dtick=2)
@@ -1179,7 +1184,7 @@ def show_race_predictor(engine):
             st.plotly_chart(fig3, use_container_width=True)
 
         with tab4:
-            if show_laps:
+            if show_laps and lap_df is not None:
                 top10_codes = mc_df.head(10)["driver_code"].tolist()
                 lap_top = lap_df[lap_df["driver_code"].isin(top10_codes)]
                 fig4 = go.Figure()
@@ -1188,31 +1193,102 @@ def show_race_predictor(engine):
                     if sub.empty: continue
                     tc = TEAM_COLORS.get(sub["team"].iloc[0], "#888")
                     fig4.add_trace(go.Scatter3d(
-                        x=sub["lap"],
-                        y=[code]*len(sub),
-                        z=sub["position"],
-                        mode='lines+markers',
-                        name=code,
+                        x=sub["lap"], y=[code]*len(sub), z=sub["position"],
+                        mode='lines+markers', name=code,
                         marker=dict(size=4, color=tc),
                         line=dict(color=tc, width=4)
                     ))
                 fig4.update_layout(
-                    title=dict(text="3D Monte Carlo Trajectory (Top 10)", font=dict(family="Rajdhani", size=18, color="#fff")),
+                    title=dict(text="3D Race Trajectory (Top 10)", font=dict(family="Rajdhani", size=18, color="#fff")),
                     scene=dict(
                         xaxis=dict(title="Lap", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
                         yaxis=dict(title="Driver", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
                         zaxis=dict(title="Position", autorange="reversed", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
                         bgcolor="rgba(0,0,0,0)"
                     ),
-                    paper_bgcolor="rgba(0,0,0,0)",
-                    plot_bgcolor="rgba(0,0,0,0)",
-                    height=600,
-                    margin=dict(l=0, r=0, b=0, t=40),
-                    showlegend=False
+                    paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                    height=600, margin=dict(l=0, r=0, b=0, t=40), showlegend=False
                 )
                 st.plotly_chart(fig4, use_container_width=True)
             else:
                 st.info("Enable 'Lap-by-Lap Trace' checkbox to generate the 3D race simulation.")
+
+        # ── Actual Results Comparison (for concluded races) ───────────────
+        race_date = pd.Timestamp(race_info["date"])
+        if race_date < pd.Timestamp.now():
+            st.markdown("<div class='section-header'>PREDICTION vs ACTUAL RESULTS</div>", unsafe_allow_html=True)
+            try:
+                from src.live_data import LiveDataIngestor
+                ingestor = LiveDataIngestor()
+                live_df = ingestor.load_cached_data()
+                if not live_df.empty:
+                    round_df = live_df[live_df["round"] == race_info["round"]]
+                    if not round_df.empty:
+                        comp_rows = []
+                        for _, actual in round_df.iterrows():
+                            code = actual["driver_code"]
+                            pred_row = mc_df[mc_df["driver_code"] == code]
+                            pred_pos = pred_row["expected_pos"].values[0] if not pred_row.empty else None
+                            actual_pos = int(actual["finish_position"])
+                            delta = round(pred_pos - actual_pos, 1) if pred_pos else None
+                            comp_rows.append({
+                                "Driver": code,
+                                "Actual Pos": actual_pos,
+                                "Predicted Pos": round(pred_pos, 1) if pred_pos else "N/A",
+                                "Delta": f"{'+' if delta and delta > 0 else ''}{delta}" if delta else "N/A",
+                                "Status": actual.get("status", ""),
+                            })
+                        comp_df = pd.DataFrame(comp_rows).sort_values("Actual Pos")
+
+                        ac1, ac2 = st.columns([1.5, 1])
+                        with ac1:
+                            st.dataframe(comp_df, use_container_width=True, hide_index=True)
+                        with ac2:
+                            valid = comp_df[comp_df["Predicted Pos"] != "N/A"].copy()
+                            if not valid.empty:
+                                valid["Predicted Pos"] = valid["Predicted Pos"].astype(float)
+                                valid["Actual Pos"] = valid["Actual Pos"].astype(int)
+                                mae = abs(valid["Predicted Pos"] - valid["Actual Pos"]).mean()
+                                top5_actual = set(valid[valid["Actual Pos"] <= 5]["Driver"])
+                                top5_pred_set = set(valid.nsmallest(5, "Predicted Pos")["Driver"])
+                                overlap = len(top5_actual & top5_pred_set)
+                                accuracy_color = "#00ff88" if mae < 3 else "#ff6b00"
+                                accuracy_msg = "Excellent prediction accuracy." if mae < 3 else ("Moderate deviation -- model calibrating." if mae < 5 else "Significant delta -- unexpected race events.")
+                                st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:1rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:2rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.65rem;color:#666;text-transform:uppercase'>Mean Abs Error</div></div><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:2rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.65rem;color:#666;text-transform:uppercase'>Top-5 Overlap</div></div></div><div style='margin-top:1rem;font-size:0.75rem;color:#888;line-height:1.6'>{accuracy_msg}</div></div>""", unsafe_allow_html=True)
+
+                        # Scatter plot: predicted vs actual
+                        valid2 = comp_df[comp_df["Predicted Pos"] != "N/A"].copy()
+                        if not valid2.empty:
+                            valid2["Predicted Pos"] = valid2["Predicted Pos"].astype(float)
+                            valid2["Actual Pos"] = valid2["Actual Pos"].astype(int)
+                            fig_comp = go.Figure()
+                            for _, r in valid2.iterrows():
+                                tc = TEAM_COLORS.get(
+                                    next((d["team"] for d in DRIVERS_2026 if d["code"] == r["Driver"]), ""), "#888"
+                                )
+                                fig_comp.add_trace(go.Scatter(
+                                    x=[r["Actual Pos"]], y=[r["Predicted Pos"]],
+                                    mode="markers+text", text=[r["Driver"]],
+                                    textposition="top center",
+                                    marker=dict(size=12, color=tc, line=dict(width=1, color="#fff")),
+                                    showlegend=False,
+                                    hovertemplate=f"<b>{r['Driver']}</b><br>Actual: P{int(r['Actual Pos'])}<br>Predicted: P{r['Predicted Pos']:.1f}<extra></extra>"
+                                ))
+                            fig_comp.add_trace(go.Scatter(
+                                x=[1, 22], y=[1, 22], mode="lines",
+                                line=dict(dash="dash", color="rgba(255,255,255,0.15)", width=1),
+                                showlegend=False, hoverinfo="skip"
+                            ))
+                            dark_layout(fig_comp, "Predicted vs Actual Finish Position", 420)
+                            fig_comp.update_xaxes(title_text="Actual Position", dtick=2)
+                            fig_comp.update_yaxes(title_text="Predicted Position", dtick=2)
+                            st.plotly_chart(fig_comp, use_container_width=True)
+                    else:
+                        st.info("This race has concluded but no results data cached yet. Click 'Initialize & Sync Live Data' in the sidebar.")
+                else:
+                    st.info("No live data available. Click 'Initialize & Sync Live Data' to fetch actual results.")
+            except Exception as e:
+                st.warning(f"Could not load actual results: {e}")
 
 
 # ─── SEASON SIMULATOR PAGE ────────────────────────────────────────────────────
