@@ -22,9 +22,16 @@ st.set_page_config(
 # ─── GLOBAL CSS ───────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    * { font-family: 'Space Grotesk', sans-serif; }
+    * { font-family: 'Inter', sans-serif; }
+
+    
+    #MainMenu {visibility: hidden; display: none;}
+    header {visibility: hidden; display: none;}
+    footer {visibility: hidden; display: none;}
+    .stDeployButton {display:none;}
+    .viewerBadge_container__1QSob {display:none;}
 
     /* ── Sidebar ─────────────────────────────────────────── */
     [data-testid="stSidebar"] {
@@ -40,7 +47,7 @@ st.markdown("""
         display: flex !important; align-items: center !important;
         padding: 0.6rem 1rem !important; border-radius: 12px !important;
         cursor: pointer !important; transition: all 0.25s ease !important;
-        color: #888 !important; font-size: 0.88rem !important; font-weight: 500 !important;
+        color: #888 !important; font-size:1.03rem !important; font-weight: 500 !important;
         border: 1px solid transparent !important; margin: 1px 0 !important; width: 100% !important;
     }
     [data-testid="stSidebar"] [data-testid="stRadio"] label:hover {
@@ -56,15 +63,15 @@ st.markdown("""
         margin-bottom: 2rem; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.4); position: relative;
     }
     .f1-hero h1 {
-        font-family: 'Rajdhani', monospace; font-size: 3.5rem; font-weight: 700; letter-spacing: 0.05em;
+        font-family: 'Outfit', monospace; font-size:3.50rem; font-weight: 700; letter-spacing: 0.05em;
         background: linear-gradient(90deg, #ff1801, #ff8700);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0;
     }
-    .f1-hero p { color: #888; margin-top: 1rem; font-size: 1.1rem; }
+    .f1-hero p { color: #888; margin-top: 1rem; font-size:1.10rem; }
 
     /* ── Section header ──────────────────────────────────── */
     .section-header {
-        font-family: 'Rajdhani', monospace; font-size: 1.4rem; font-weight: 700;
+        font-family: 'Outfit', monospace; font-size:1.40rem; font-weight: 700;
         color: #fff; border-left: 4px solid #ff1801; border-radius: 2px;
         padding-left: 0.8rem; margin: 2rem 0 1.2rem 0;
         text-transform: uppercase; letter-spacing: 0.1em;
@@ -77,8 +84,8 @@ st.markdown("""
         padding: 1.5rem; transition: all 0.3s cubic-bezier(0.4,0,0.2,1); text-align: center;
     }
     .metric-card:hover { transform: translateY(-5px); border-color: #ff1e00; box-shadow: 0 15px 35px rgba(255,30,0,0.15); }
-    .metric-card .val { font-family: 'Rajdhani', monospace; font-size: 2.8rem; font-weight: 700; color: #ff1801; }
-    .metric-card .label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
+    .metric-card .val { font-family: 'Outfit', monospace; font-size:2.80rem; font-weight: 700; color: #ff1801; }
+    .metric-card .label { font-size:0.95rem; color: #666; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.4rem; }
 
     /* ── Driver card ─────────────────────────────────────── */
     .driver-card {
@@ -106,31 +113,31 @@ st.markdown("""
     .race-header-row { display: flex; align-items: center; gap: 1rem; width: 100%; padding: 0.4rem 0; }
     .race-rnd {
         background: linear-gradient(135deg, #ff1e00, #ff6b00); color: #fff;
-        font-family: 'Rajdhani'; font-size: 0.7rem; font-weight: 900;
+        font-family: 'Outfit'; font-size:0.90rem; font-weight: 900;
         padding: 0.3rem 0.55rem; border-radius: 8px; letter-spacing: 0.08em;
         min-width: 36px; text-align: center; flex-shrink: 0;
     }
-    .race-flag { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+    .race-flag { font-size:1.50rem; flex-shrink: 0; line-height: 1; }
     .race-name-block { flex: 1; min-width: 0; }
-    .race-name-txt { font-weight: 700; color: #fff; font-size: 0.97rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .race-circuit-txt { font-size: 0.74rem; color: #555; margin-top: 2px; }
+    .race-name-txt { font-weight: 700; color: #fff; font-size:1.12rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .race-circuit-txt { font-size:0.94rem; color: #555; margin-top: 2px; }
     .race-meta-block { text-align: right; flex-shrink: 0; }
-    .race-date-txt { font-size: 0.8rem; color: #bbb; font-weight: 500; }
+    .race-date-txt { font-size:1.00rem; color: #bbb; font-weight: 500; }
     .race-type-pill {
-        display: inline-block; font-size: 0.6rem; font-weight: 700;
+        display: inline-block; font-size:0.85rem; font-weight: 700;
         text-transform: uppercase; letter-spacing: 0.08em;
         padding: 0.15rem 0.55rem; border-radius: 999px; margin-top: 0.3rem;
         border: 1px solid currentColor; opacity: 0.9;
     }
     .sprint-badge {
         display: inline-block; background: linear-gradient(90deg,#9b30ff,#6600cc);
-        color: #fff; font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em;
+        color: #fff; font-size:0.80rem; font-weight: 800; letter-spacing: 0.1em;
         padding: 0.15rem 0.45rem; border-radius: 5px; margin-left: 0.4rem;
         vertical-align: middle; text-transform: uppercase;
     }
     .race-sprint-badge {
         display:inline-block;background:linear-gradient(90deg,#9b30ff,#6600cc);
-        color:#fff;font-size:0.55rem;font-weight:800;letter-spacing:0.1em;
+        color:#fff;font-size:0.80rem;font-weight:800;letter-spacing:0.1em;
         padding:0.15rem 0.45rem;border-radius:5px;margin-left:0.4rem;
         vertical-align:middle;text-transform:uppercase;
     }
@@ -143,17 +150,24 @@ st.markdown("""
         background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
         border-radius: 10px; padding: 0.6rem 0.8rem;
     }
-    .track-stat-label { font-size: 0.6rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
-    .track-stat-value { font-size: 0.88rem; color: #ddd; font-weight: 600; margin-top: 0.15rem; }
+    .track-stat-label { font-size:0.85rem; color: #555; text-transform: uppercase; letter-spacing: 0.08em; }
+    .track-stat-value { font-size:1.03rem; color: #ddd; font-weight: 600; margin-top: 0.15rem; }
+
+    
+    #MainMenu {visibility: hidden; display: none;}
+    header {visibility: hidden; display: none;}
+    footer {visibility: hidden; display: none;}
+    .stDeployButton {display:none;}
+    .viewerBadge_container__1QSob {display:none;}
 
     /* ── Sidebar stat card ───────────────────────────────── */
     .sb-card {
         background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
         border-radius: 14px; padding: 0.85rem 1rem; margin: 0.3rem 0;
     }
-    .sb-card-label { font-size: 0.58rem; color: #444; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
-    .sb-card-value { font-family: 'Rajdhani'; font-size: 1rem; font-weight: 900; color: #fff; }
-    .sb-card-sub { font-size: 0.68rem; color: #555; margin-top: 0.15rem; }
+    .sb-card-label { font-size:0.83rem; color: #444; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; }
+    .sb-card-value { font-family: 'Outfit'; font-size: 1rem; font-weight: 900; color: #fff; }
+    .sb-card-sub { font-size:0.88rem; color: #555; margin-top: 0.15rem; }
 
     /* ── Podium ──────────────────────────────────────────── */
     .podium-p1 { background: rgba(255,215,0,0.05); border: 2px solid #FFD700; border-radius: 24px; padding: 2rem; text-align: center; }
@@ -164,11 +178,11 @@ st.markdown("""
     .reg-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 1.5rem; height: 100%; transition: all 0.3s; }
     .reg-card:hover { background: rgba(255,255,255,0.06); }
     .countdown-box { background: rgba(255,30,0,0.03); border: 1px solid #ff1e0033; border-radius: 24px; padding: 2rem; text-align: center; }
-    .countdown-num { font-family: 'Rajdhani'; font-size: 3.5rem; font-weight: 900; color: #fff; filter: drop_shadow(0 0 15px rgba(255,30,0,0.4)); }
-    .countdown-label { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 0.2em; margin-left: 0.4rem; vertical-align: super; }
+    .countdown-num { font-family: 'Outfit'; font-size:3.50rem; font-weight: 900; color: #fff; filter: drop_shadow(0 0 15px rgba(255,30,0,0.4)); }
+    .countdown-label { font-size:0.90rem; color: #555; text-transform: uppercase; letter-spacing: 0.2em; margin-left: 0.4rem; vertical-align: super; }
     .stDataFrame { border-radius: 20px !important; }
-    .stButton>button { border-radius: 12px !important; transition: all 0.3s; font-family: 'Rajdhani'; }
-    .stSelectbox label, .stMultiSelect label { font-family: 'Space Grotesk'; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.7rem !important; color: #555 !important; }
+    .stButton>button { border-radius: 12px !important; transition: all 0.3s; font-family: 'Outfit'; }
+    .stSelectbox label, .stMultiSelect label { font-family: 'Inter'; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size:0.90rem !important; color: #555 !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -211,7 +225,7 @@ def get_icon(name: str, size: int = 24, color: str = "currentColor", margin_righ
 def flag_pill(iso: str, color: str = "#555") -> str:
     """Return a small styled ISO country-code badge for use in HTML."""
     return (f"<span style='display:inline-flex;align-items:center;justify-content:center;"
-            f"background:rgba(255,255,255,0.07);color:{color};font-size:0.58rem;"
+            f"background:rgba(255,255,255,0.07);color:{color};font-size:0.83rem;"
             f"font-weight:700;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.15);"
             f"border-radius:4px;padding:0.15rem 0.4rem;font-family:monospace;"
             f"min-width:1.8rem;text-align:center'>{iso}</span>")
@@ -249,9 +263,9 @@ def _hex_rgba(hex_color: str, alpha: float = 0.2) -> str:
 
 def dark_layout(fig, title="", height=420):
     fig.update_layout(
-        title=dict(text=title, font=dict(family="Rajdhani", size=16, color="#fff")),
+        title=dict(text=title, font=dict(family="Outfit", size=16, color="#fff")),
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Space Grotesk", color="#aaa"),
+        font=dict(family="Inter", color="#aaa"),
         height=height,
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#ccc")),
         margin=dict(t=50, b=40, l=40, r=20),
@@ -307,7 +321,7 @@ CIRCUIT_DETAILS = {
     "Singapore":     {"length": 4.940, "lap_record": "1:35.867 (Santos, 2023)",     "drs_zones": 3, "first_gp": 2008, "key_corner": "Turn 5 (Raffles Blvd)", "characteristic": "Night race, hottest/most humid circuit, most corners"},
     "Austin":        {"length": 5.513, "lap_record": "1:36.169 (Leclerc, 2019)",   "drs_zones": 2, "first_gp": 2012, "key_corner": "Turn 1 (blind crest)",  "characteristic": "Technical Hermann Tilke design, challenging elevation change"},
     "Mexico City":   {"length": 4.304, "lap_record": "1:17.774 (Bottas, 2021)",    "drs_zones": 3, "first_gp": 1963, "key_corner": "Estadio section",        "characteristic": "Highest altitude circuit (2285m), massive straight, low aero"},
-    "Space Grotesklagos":    {"length": 4.309, "lap_record": "1:10.540 (Rubens, 2004)",    "drs_zones": 2, "first_gp": 1973, "key_corner": "Senna S",                "characteristic": "Anti-clockwise, undulating, unpredictable weather"},
+    "Interlagos":    {"length": 4.309, "lap_record": "1:10.540 (Rubens, 2004)",    "drs_zones": 2, "first_gp": 1973, "key_corner": "Senna S",                "characteristic": "Anti-clockwise, undulating, unpredictable weather"},
     "Las Vegas":     {"length": 6.201, "lap_record": "1:35.490 (Leclerc, 2023)",   "drs_zones": 3, "first_gp": 2023, "key_corner": "Turn 14 hairpin (Apex)", "characteristic": "Strip circuit, nighttime glamour, fast straights"},
     "Lusail":       {"length": 5.380, "lap_record": "1:24.319 (Verstappen, 2023)", "drs_zones": 2, "first_gp": 2021, "key_corner": "Turn 1 braking zone",   "characteristic": "High-speed flowing layout, massive tyre degradation"},
     "Yas Marina":   {"length": 5.281, "lap_record": "1:26.103 (Verstappen, 2021)", "drs_zones": 2, "first_gp": 2009, "key_corner": "Turn 6 (marina section)","characteristic": "Season finale, mixed day/night race, Abu Dhabi"},
@@ -337,7 +351,7 @@ CIRCUIT_COORDS = {
     "Singapore":    (  1.2914,  103.8644, 15),
     "Austin":       ( 30.1328,  -97.6411, 14),
     "Mexico City":  ( 19.4042,  -99.0907, 14),
-    "Space Grotesklagos":   (-23.7036,  -46.6997, 14),
+    "Interlagos":   (-23.7036,  -46.6997, 14),
     "Las Vegas":    ( 36.1147, -115.1728, 14),
     "Lusail":       ( 25.4900,   51.4542, 14),
     "Yas Marina":   ( 24.4672,   54.6031, 14),
@@ -363,7 +377,7 @@ def get_map_embed(circuit_name: str, height: int = 185) -> str:
         f"style='border:none;display:block;"
         f"filter:brightness(0.88) saturate(0.78) contrast(1.08)' "
         f"loading='lazy' title='{circuit_name} map'></iframe>"
-        f"<div style='position:absolute;bottom:4px;right:6px;font-size:0.46rem;"
+        f"<div style='position:absolute;bottom:4px;right:6px;font-size:0.71rem;"
         f"color:#999;background:rgba(0,0,0,0.6);padding:1px 5px;border-radius:3px;"
         f"pointer-events:none'>© OpenStreetMap</div></div>"
     )
@@ -411,7 +425,7 @@ def get_track_svg(circuit_name: str, color: str = "#ff1e00") -> str:
         "Singapore": "marina_bay.webp",
         "Austin": "americas.webp",
         "Mexico City": "rodriguez.webp",
-        "Space Grotesklagos": "interlagos.webp",
+        "Interlagos": "interlagos.webp",
         "Las Vegas": "vegas.webp",
         "Lusail": "losail.webp",
         "Yas Marina": "yas_marina.webp"
@@ -437,10 +451,10 @@ def show_footer():
     <hr style='border:none; border-top:1px solid rgba(255,255,255,0.08); margin: 3rem 0 1rem 0'>
     <div style='text-align:center; padding: 1rem 0 2rem 0; opacity: 0.7'>
         <img src='{F1_LOGO_URL}' style='width:120px; margin-bottom:1rem; opacity:0.8; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1))'>
-        <div style='font-size:0.75rem; color:#666; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.6rem'>
+        <div style='font-size:0.95rem; color:#666; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.6rem'>
             2026 Season Intelligence &middot; Powered by ML
         </div>
-        <div style='font-size:0.65rem; color:#444; max-width:600px; margin:0 auto'>
+        <div style='font-size:0.85rem; color:#444; max-width:600px; margin:0 auto'>
             Predictions are model-generated simulations for entertainment purposes only.
             This application is not affiliated with the Formula 1 group of companies, the FIA, or any F1 team.
         </div>
@@ -457,7 +471,7 @@ def render_sidebar(engine):
                     border-bottom:1px solid rgba(255,255,255,0.05); text-align:center'>
             <img src='{F1_LOGO_URL}'
                  style='width:100px; filter:drop-shadow(0 0 18px rgba(255,30,0,0.5)) brightness(1.1)'>
-            <div style='margin-top:0.6rem; font-family:"Rajdhani",monospace; font-size:0.5rem;
+            <div style='margin-top:0.6rem; font-family:"Outfit",monospace; font-size:0.75rem;
                         font-weight:700; letter-spacing:0.35em; color:#ff1e00;
                         text-transform:uppercase'>2026 Intelligence Hub</div>
         </div>
@@ -497,11 +511,11 @@ def render_sidebar(engine):
             <div class='sb-card'>
                 <div class='sb-card-label'>{get_icon('clock', 12, '#444', 4)} Season Countdown</div>
                 <div style='display:flex;align-items:baseline;gap:0.5rem;margin-top:0.3rem'>
-                    <span style='font-family:Rajdhani;font-size:2rem;font-weight:900;
+                    <span style='font-family:Outfit;font-size:2rem;font-weight:900;
                                  color:#ff1e00;text-shadow:0 0 20px rgba(255,30,0,0.4)'>
                         {days_left}
                     </span>
-                    <span style='font-size:0.6rem;color:#444;letter-spacing:0.1em'>DAYS</span>
+                    <span style='font-size:0.85rem;color:#444;letter-spacing:0.1em'>DAYS</span>
                 </div>
                 <div class='sb-card-sub'>TO MELBOURNE · MARCH 8</div>
             </div>
@@ -510,7 +524,7 @@ def render_sidebar(engine):
             st.markdown(f"""
             <div class='sb-card' style='border-color:rgba(0,255,136,0.3)'>
                 <div class='sb-card-label'>{get_icon('race-flag', 12, '#00ff88', 4)} Season Status</div>
-                <div style='color:#00ff88;font-family:Rajdhani;font-size:0.8rem;font-weight:700;margin-top:0.3rem'>
+                <div style='color:#00ff88;font-family:Outfit;font-size:1.00rem;font-weight:700;margin-top:0.3rem'>
                     LIVE SEASON ACTIVE
                 </div>
             </div>
@@ -530,12 +544,12 @@ def render_sidebar(engine):
                 <div class='sb-card-label'>{get_icon('compass', 12, '#444', 4)} Next Round · R{nr["round"]}</div>
                 <div style='display:flex;align-items:center;gap:0.4rem;margin-top:0.3rem'>
                     {fp}
-                    <span style='font-weight:700;color:#fff;font-size:0.86rem'>{nr["name"]}</span>
+                    <span style='font-weight:700;color:#fff;font-size:1.01rem'>{nr["name"]}</span>
                 </div>
-                <div style='font-size:0.7rem;color:#444;margin-top:0.2rem'>
+                <div style='font-size:0.90rem;color:#444;margin-top:0.2rem'>
                     {nr["circuit"]} · <span style='color:{nr_color}'>{nr["circuit_type"].replace("_"," ").title()}</span>{sprint_txt}
                 </div>
-                <div style='font-size:0.68rem;color:#666;margin-top:0.22rem'>
+                <div style='font-size:0.88rem;color:#666;margin-top:0.22rem'>
                     {pd.Timestamp(nr["date"]).strftime("%b %d, %Y")}
                 </div>
             </div>
@@ -548,7 +562,7 @@ def render_sidebar(engine):
 
         # ── Model status ──────────────────────────────────────────────────────
         st.markdown(f"""
-        <div style='font-size:0.55rem;color:#2a2a3a;text-transform:uppercase;
+        <div style='font-size:0.80rem;color:#2a2a3a;text-transform:uppercase;
                     letter-spacing:0.18em;padding:0 0.2rem 0.4rem 0.2rem;font-weight:700'>
             {get_icon('cpu', 11, '#2a2a3a', 4)}ML Engine
         </div>""", unsafe_allow_html=True)
@@ -559,9 +573,9 @@ def render_sidebar(engine):
                 <div style='display:flex;align-items:center;gap:0.5rem'>
                     <div style='width:8px;height:8px;border-radius:50%;background:#ff1e00;
                                 box-shadow:0 0 8px #ff1e00'></div>
-                    <span style='font-size:0.72rem;color:#ff6b00;font-weight:600'>MODEL OFFLINE</span>
+                    <span style='font-size:0.92rem;color:#ff6b00;font-weight:600'>MODEL OFFLINE</span>
                 </div>
-                <div style='font-size:0.62rem;color:#333;margin-top:0.3rem'>
+                <div style='font-size:0.87rem;color:#333;margin-top:0.3rem'>
                     Initialize to enable predictions
                 </div>
             </div>
@@ -583,9 +597,9 @@ def render_sidebar(engine):
                 <div style='display:flex;align-items:center;gap:0.5rem'>
                     <div style='width:8px;height:8px;border-radius:50%;background:#00ff88;
                                 box-shadow:0 0 8px #00ff88'></div>
-                    <span style='font-size:0.72rem;color:#00ff88;font-weight:700;font-family:Rajdhani'>ACTIVE</span>
+                    <span style='font-size:0.92rem;color:#00ff88;font-weight:700;font-family:Outfit'>ACTIVE</span>
                 </div>
-                <div style='font-size:0.65rem;color:#444;margin-top:0.3rem'>
+                <div style='font-size:0.85rem;color:#444;margin-top:0.3rem'>
                     {best} · MAE {mae} · R² {r2}
                 </div>
             </div>
@@ -596,7 +610,7 @@ def render_sidebar(engine):
         <div style='margin-top:1.5rem;padding-top:0.8rem;border-top:1px solid rgba(255,255,255,0.04);
                     text-align:center'>
             <img src='{F1_LOGO_URL}' style='width:50px;opacity:0.12;filter:grayscale(1)'>
-            <div style='font-size:0.5rem;color:#1e1e2e;margin-top:0.25rem;letter-spacing:0.1em'>
+            <div style='font-size:0.75rem;color:#1e1e2e;margin-top:0.25rem;letter-spacing:0.1em'>
                 F1 2026 PREDICTOR
             </div>
         </div>
@@ -612,10 +626,10 @@ def show_home():
     st.markdown(f"""<div style='background:linear-gradient(135deg,rgba(255,24,1,0.08) 0%,rgba(10,10,20,0.95) 40%,rgba(39,244,210,0.05) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:28px;padding:3rem 2.5rem 2.5rem;margin-bottom:2rem;text-align:center;position:relative;overflow:hidden'>
 <div style='position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,24,1,0.15),transparent 70%);border-radius:50%'></div>
 <div style='position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(39,244,210,0.1),transparent 70%);border-radius:50%'></div>
-<div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;letter-spacing:0.35em;color:#ff1801;text-transform:uppercase;margin-bottom:0.8rem'>2026 Season Intelligence Platform</div>
-<h1 style='font-family:Rajdhani;font-size:3.8rem;font-weight:700;background:linear-gradient(90deg,#ff1801,#ff8700,#27F4D2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;line-height:1.1'>FORMULA 1</h1>
-<div style='font-family:Rajdhani;font-size:1.6rem;font-weight:700;color:#fff;letter-spacing:0.15em;margin-top:0.3rem'>THE NEW ERA</div>
-<p style='color:#666;margin-top:1rem;font-size:0.95rem;max-width:500px;margin-left:auto;margin-right:auto'>AI-powered race predictions, Monte Carlo simulations, and real-time analytics for the most transformative season in motorsport history</p>
+<div style='font-family:Outfit;font-size:0.90rem;font-weight:700;letter-spacing:0.35em;color:#ff1801;text-transform:uppercase;margin-bottom:0.8rem'>2026 Season Intelligence Platform</div>
+<h1 style='font-family:Outfit;font-size:3.80rem;font-weight:700;background:linear-gradient(90deg,#ff1801,#ff8700,#27F4D2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:0;line-height:1.1'>FORMULA 1</h1>
+<div style='font-family:Outfit;font-size:1.60rem;font-weight:700;color:#fff;letter-spacing:0.15em;margin-top:0.3rem'>THE NEW ERA</div>
+<p style='color:#666;margin-top:1rem;font-size:1.10rem;max-width:500px;margin-left:auto;margin-right:auto'>AI-powered race predictions, Monte Carlo simulations, and real-time analytics for the most transformative season in motorsport history</p>
 </div>""", unsafe_allow_html=True)
 
     # Live season status bar
@@ -634,26 +648,26 @@ def show_home():
         nr_flag = flag_pill(next_race["flag"], "#888")
         ct_color_map = {"power":"#ff6b00","high_speed":"#ff1e00","street":"#FF87BC","technical":"#27F4D2","balanced":"#aaa"}
         nr_ct_color = ct_color_map.get(next_race["circuit_type"], "#888")
-        sprint_tag = "<span style='background:linear-gradient(90deg,#9b30ff,#6600cc);color:#fff;font-size:0.5rem;font-weight:800;padding:0.1rem 0.35rem;border-radius:4px;margin-left:0.4rem;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
+        sprint_tag = "<span style='background:linear-gradient(90deg,#9b30ff,#6600cc);color:#fff;font-size:0.75rem;font-weight:800;padding:0.1rem 0.35rem;border-radius:4px;margin-left:0.4rem;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
 
         st.markdown(f"""<div style='background:rgba(12,12,22,0.9);border:1px solid rgba(255,255,255,0.06);border-radius:18px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap'>
 <div style='flex:1;min-width:200px'>
-<div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;margin-bottom:0.4rem'>Next Race</div>
+<div style='font-size:0.85rem;color:#555;text-transform:uppercase;letter-spacing:0.15em;font-weight:700;margin-bottom:0.4rem'>Next Race</div>
 <div style='display:flex;align-items:center;gap:0.5rem'>
 {nr_flag}
-<span style='font-family:Rajdhani;font-size:1.2rem;font-weight:700;color:#fff'>{next_race["name"]}{sprint_tag}</span>
+<span style='font-family:Outfit;font-size:1.20rem;font-weight:700;color:#fff'>{next_race["name"]}{sprint_tag}</span>
 </div>
-<div style='font-size:0.75rem;color:#555;margin-top:0.2rem'>{next_race["circuit"]} &middot; <span style='color:{nr_ct_color}'>{next_race["circuit_type"].replace("_"," ").title()}</span></div>
+<div style='font-size:0.95rem;color:#555;margin-top:0.2rem'>{next_race["circuit"]} &middot; <span style='color:{nr_ct_color}'>{next_race["circuit_type"].replace("_"," ").title()}</span></div>
 </div>
 <div style='display:flex;gap:1.2rem;align-items:center'>
 <div style='text-align:center'>
-<div style='font-family:Rajdhani;font-size:2.4rem;font-weight:700;color:#ff1801;line-height:1'>{nr_days}</div>
-<div style='font-size:0.55rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Days Away</div>
+<div style='font-family:Outfit;font-size:2.40rem;font-weight:700;color:#ff1801;line-height:1'>{nr_days}</div>
+<div style='font-size:0.80rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Days Away</div>
 </div>
 <div style='width:1px;height:40px;background:rgba(255,255,255,0.06)'></div>
 <div style='text-align:center'>
-<div style='font-family:Rajdhani;font-size:2.4rem;font-weight:700;color:#27F4D2;line-height:1'>{races_done}/{races_total}</div>
-<div style='font-size:0.55rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Races Done</div>
+<div style='font-family:Outfit;font-size:2.40rem;font-weight:700;color:#27F4D2;line-height:1'>{races_done}/{races_total}</div>
+<div style='font-size:0.80rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Races Done</div>
 </div>
 </div>
 </div>""", unsafe_allow_html=True)
@@ -661,8 +675,8 @@ def show_home():
     # Season progress bar
     st.markdown(f"""<div style='margin-bottom:2rem'>
 <div style='display:flex;justify-content:space-between;margin-bottom:0.4rem'>
-<span style='font-size:0.65rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Season Progress</span>
-<span style='font-size:0.65rem;color:#ff1801;font-weight:700'>{progress_pct:.0f}%</span>
+<span style='font-size:0.85rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Season Progress</span>
+<span style='font-size:0.85rem;color:#ff1801;font-weight:700'>{progress_pct:.0f}%</span>
 </div>
 <div style='width:100%;height:4px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden'>
 <div style='width:{progress_pct}%;height:100%;background:linear-gradient(90deg,#ff1801,#ff8700);border-radius:4px;transition:width 0.8s'></div>
@@ -681,8 +695,8 @@ def show_home():
     for col, (val, label, color, icon) in zip([c1,c2,c3,c4], stats):
         col.markdown(f"""<div style='background:rgba(12,12,22,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:1.3rem 1rem;text-align:center;transition:all 0.3s'>
 <div style='margin-bottom:0.5rem'>{get_icon(icon, 24, color)}</div>
-<div style='font-family:Rajdhani;font-size:2.6rem;font-weight:700;color:{color};line-height:1'>{val}</div>
-<div style='font-size:0.65rem;color:#555;text-transform:uppercase;letter-spacing:0.12em;margin-top:0.3rem'>{label}</div>
+<div style='font-family:Outfit;font-size:2.60rem;font-weight:700;color:{color};line-height:1'>{val}</div>
+<div style='font-size:0.85rem;color:#555;text-transform:uppercase;letter-spacing:0.12em;margin-top:0.3rem'>{label}</div>
 </div>""", unsafe_allow_html=True)
 
     # Regulation highlights
@@ -697,8 +711,8 @@ def show_home():
     for col, (icon_name, title, desc, accent) in zip([r1,r2,r3,r4], regs):
         col.markdown(f"""<div style='background:rgba(12,12,22,0.8);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:1.3rem 1rem;height:100%;transition:all 0.3s'>
 <div style='margin-bottom:0.6rem'>{get_icon(icon_name, 28, accent)}</div>
-<div style='font-family:Rajdhani;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.4rem'>{title}</div>
-<div style='font-size:0.75rem;color:#666;line-height:1.5'>{desc}</div>
+<div style='font-family:Outfit;font-size:1.10rem;font-weight:700;color:#fff;margin-bottom:0.4rem'>{title}</div>
+<div style='font-size:0.95rem;color:#666;line-height:1.5'>{desc}</div>
 </div>""", unsafe_allow_html=True)
 
     # Constructor lineup — grouped horizontal bars with team colors
@@ -717,19 +731,19 @@ def show_home():
 
         st.markdown(f"""<div style='display:flex;align-items:center;gap:1rem;padding:0.55rem 0.8rem;margin-bottom:0.35rem;background:rgba(12,12,22,0.6);border:1px solid rgba(255,255,255,0.04);border-radius:12px;border-left:4px solid {color}'>
 <div style='min-width:140px'>
-<div style='font-family:Rajdhani;font-size:0.85rem;font-weight:700;color:{color}'>{team}</div>
-<div style='font-size:0.65rem;color:#555'>{driver_codes} &middot; {pu}</div>
+<div style='font-family:Outfit;font-size:1.00rem;font-weight:700;color:{color}'>{team}</div>
+<div style='font-size:0.85rem;color:#555'>{driver_codes} &middot; {pu}</div>
 </div>
 <div style='flex:1;position:relative'>
 <div style='width:100%;height:22px;background:rgba(255,255,255,0.03);border-radius:6px;overflow:hidden'>
 <div style='width:{bar_width}%;height:100%;background:linear-gradient(90deg,{color}44,{color});border-radius:6px;display:flex;align-items:center;padding-left:0.5rem'>
-<span style='font-size:0.65rem;color:#fff;font-weight:700'>{driver_names}</span>
+<span style='font-size:0.85rem;color:#fff;font-weight:700'>{driver_names}</span>
 </div>
 </div>
 </div>
 <div style='min-width:50px;text-align:right'>
-<span style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:{color}'>{overall:.1f}</span>
-<span style='font-size:0.5rem;color:#555'>/10</span>
+<span style='font-family:Outfit;font-size:1.10rem;font-weight:700;color:{color}'>{overall:.1f}</span>
+<span style='font-size:0.75rem;color:#555'>/10</span>
 </div>
 </div>""", unsafe_allow_html=True)
 
@@ -739,7 +753,7 @@ def show_home():
 # ─── RACE ANALYSIS PAGE ──────────────────────────────────────────────────────
 def show_race_analysis(engine):
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('layers', 28, '#ff1e00')} RACE ANALYSIS</h1>
+        <h1 style="font-size:1.80rem">{get_icon('layers', 28, '#ff1e00')} RACE ANALYSIS</h1>
         <p>Detailed post-race breakdowns for concluded 2026 Grand Prix events</p>
     </div>""", unsafe_allow_html=True)
 
@@ -781,7 +795,7 @@ def show_race_analysis(engine):
     ct_color = ct_color_map.get(race_info["circuit_type"], "#888")
 
     # Race header
-    st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_name}</div><div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span> &middot; {race_info["laps"]} laps</div></div><div style='text-align:right'><div style='font-family:Rajdhani;font-size:0.7rem;color:#555;text-transform:uppercase'>Round {round_num}</div><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#00ff88'>COMPLETED</div></div></div>""", unsafe_allow_html=True)
+    st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Outfit;font-size:1.40rem;font-weight:900;color:#fff'>{selected_name}</div><div style='color:#888;font-size:1.05rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span> &middot; {race_info["laps"]} laps</div></div><div style='text-align:right'><div style='font-family:Outfit;font-size:0.90rem;color:#555;text-transform:uppercase'>Round {round_num}</div><div style='font-family:Outfit;font-size:1.10rem;font-weight:700;color:#00ff88'>COMPLETED</div></div></div>""", unsafe_allow_html=True)
 
     # Actual podium
     top3 = round_df.head(3)
@@ -802,7 +816,7 @@ def show_race_analysis(engine):
             team = drv_info["team"] if drv_info else ""
             icon_color = "#FFD700" if iloc_idx == 0 else ("#C0C0C0" if iloc_idx == 1 else "#CD7F32")
             big = iloc_idx == 0
-            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{code}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{name}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.65rem;font-weight:700'>{team}</div><p style='margin-top:0.5rem;font-size:0.75rem;color:#888'>P{int(d["finish_position"])} (Grid: P{int(d["grid_position"])})</p></div>""", unsafe_allow_html=True)
+            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Outfit;font-size:0.90rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.80rem;" if big else "font-size:1.40rem;"}'>{code}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{name}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.85rem;font-weight:700'>{team}</div><p style='margin-top:0.5rem;font-size:0.95rem;color:#888'>P{int(d["finish_position"])} (Grid: P{int(d["grid_position"])})</p></div>""", unsafe_allow_html=True)
 
     # Analysis tabs
     tab1, tab2, tab3, tab4 = st.tabs(["Race Results", "Grid vs Finish", "Points Breakdown", "Prediction Accuracy"])
@@ -864,7 +878,7 @@ def show_race_analysis(engine):
                 drv = next((dr for dr in DRIVERS_2026 if dr["code"] == d["driver_code"]), None)
                 tc = TEAM_COLORS.get(drv["team"], "#888") if drv else "#888"
                 name = drv["name"] if drv else d["driver_code"]
-                st.markdown(f"""<div style='display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,30,0,0.08);border:1px solid rgba(255,30,0,0.15);border-radius:10px;padding:0.4rem 0.8rem;margin:0.2rem 0.3rem'><div style='width:8px;height:8px;border-radius:50%;background:#ff1e00'></div><span style='font-weight:700;color:{tc};font-size:0.8rem'>{d["driver_code"]}</span><span style='color:#888;font-size:0.75rem'>{name} — {d.get("status","DNF")}</span></div>""", unsafe_allow_html=True)
+                st.markdown(f"""<div style='display:inline-flex;align-items:center;gap:0.5rem;background:rgba(255,30,0,0.08);border:1px solid rgba(255,30,0,0.15);border-radius:10px;padding:0.4rem 0.8rem;margin:0.2rem 0.3rem'><div style='width:8px;height:8px;border-radius:50%;background:#ff1e00'></div><span style='font-weight:700;color:{tc};font-size:1.00rem'>{d["driver_code"]}</span><span style='color:#888;font-size:0.95rem'>{name} — {d.get("status","DNF")}</span></div>""", unsafe_allow_html=True)
 
     with tab4:
         st.markdown("<div class='section-header'>MODEL PREDICTION vs ACTUAL</div>", unsafe_allow_html=True)
@@ -905,7 +919,7 @@ def show_race_analysis(engine):
                     overlap = len(top5_actual & top5_pred_set)
                     within3 = (abs(valid["Predicted"] - valid["Actual"]) <= 3).mean() * 100
                     accuracy_color = "#00ff88" if mae < 3 else "#ff6b00"
-                    st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:0.8rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>MAE</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>Top-5 Match</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:1.8rem;font-weight:700;color:#9b30ff'>{within3:.0f}%</div><div style='font-size:0.6rem;color:#666;text-transform:uppercase'>Within 3 Pos</div></div></div></div>""", unsafe_allow_html=True)
+                    st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Outfit;font-size:1.10rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:0.8rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Outfit;font-size:1.80rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.85rem;color:#666;text-transform:uppercase'>MAE</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Outfit;font-size:1.80rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.85rem;color:#666;text-transform:uppercase'>Top-5 Match</div></div><div style='flex:1;text-align:center;padding:0.6rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Outfit;font-size:1.80rem;font-weight:700;color:#9b30ff'>{within3:.0f}%</div><div style='font-size:0.85rem;color:#666;text-transform:uppercase'>Within 3 Pos</div></div></div></div>""", unsafe_allow_html=True)
 
             # Scatter
             valid2 = comp_df[comp_df["Predicted"] != "N/A"].copy()
@@ -946,31 +960,31 @@ def show_calendar():
     status_badge = ""
     if next_race is not None:
         nr_days = (next_race["date"] - today).days
-        sprint_tag = " <span style='background:#9b30ff;color:#fff;font-size:0.52rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:5px;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
+        sprint_tag = " <span style='background:#9b30ff;color:#fff;font-size:0.77rem;font-weight:800;padding:0.1rem 0.4rem;border-radius:5px;vertical-align:middle'>SPRINT</span>" if next_race["sprint"] else ""
         status_badge = (
             f"<div style='margin-top:0.7rem;display:inline-flex;align-items:center;gap:0.6rem;"
             f"background:rgba(255,30,0,0.08);border:1px solid rgba(255,30,0,0.2);"
-            f"border-radius:20px;padding:0.35rem 0.9rem;font-size:0.78rem;color:#ccc'>"
+            f"border-radius:20px;padding:0.35rem 0.9rem;font-size:0.98rem;color:#ccc'>"
             f"{get_icon('compass', 14, '#ff6b00', 6)}"
             f"<span>Next: <b style='color:#fff'>{next_race['name']}</b>{sprint_tag}</span>"
-            f"<span style='color:#ff1e00;font-family:Rajdhani;font-weight:900'>"
+            f"<span style='color:#ff1e00;font-family:Outfit;font-weight:900'>"
             f"{'TODAY' if nr_days == 0 else f'in {nr_days}d'}</span></div>"
         )
 
     st.markdown(f"""<div class="f1-hero" style="padding:1.6rem 2rem;text-align:left">
         <div style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem'>
           <div>
-            <h1 style="font-size:1.7rem;margin:0">{get_icon("calendar",26,"#ff1e00")} 2026 GRAND PRIX CALENDAR</h1>
+            <h1 style="font-size:1.70rem;margin:0">{get_icon("calendar",26,"#ff1e00")} 2026 GRAND PRIX CALENDAR</h1>
             <p style="margin:0.4rem 0 0 0">24 Grands Prix &middot; 5 continents &middot; 6 Sprint weekends</p>
           </div>
           <div style='display:flex;gap:1.2rem'>
             <div style='text-align:center'>
-              <div style='font-family:Rajdhani;font-size:1.6rem;font-weight:900;color:#ff1e00'>{races_done}</div>
-              <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Completed</div>
+              <div style='font-family:Outfit;font-size:1.60rem;font-weight:900;color:#ff1e00'>{races_done}</div>
+              <div style='font-size:0.85rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Completed</div>
             </div>
             <div style='text-align:center'>
-              <div style='font-family:Rajdhani;font-size:1.6rem;font-weight:900;color:#27F4D2'>{races_left}</div>
-              <div style='font-size:0.6rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Remaining</div>
+              <div style='font-family:Outfit;font-size:1.60rem;font-weight:900;color:#27F4D2'>{races_left}</div>
+              <div style='font-size:0.85rem;color:#555;text-transform:uppercase;letter-spacing:0.1em'>Remaining</div>
             </div>
           </div>
         </div>
@@ -1029,12 +1043,12 @@ def show_calendar():
             st.markdown(f"""
             <div style='display:flex;align-items:center;gap:0.8rem;
                         margin:1.6rem 0 0.7rem 0'>
-              <div style='font-family:Rajdhani;font-size:0.75rem;font-weight:900;
+              <div style='font-family:Outfit;font-size:0.95rem;font-weight:900;
                           color:#fff;letter-spacing:0.15em;text-transform:uppercase'>
                 {current_month}
               </div>
               <div style='flex:1;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent)'></div>
-              <div style='font-size:0.6rem;color:#444'>
+              <div style='font-size:0.85rem;color:#444'>
                 {race_count} race{"s" if race_count != 1 else ""}
                 {f"&nbsp;&middot;&nbsp;<span style='color:#9b30ff'>{sprint_count} sprint</span>" if sprint_count else ""}
               </div>
@@ -1089,7 +1103,7 @@ def _render_race_card(col, race, ct_color_map, today):
 
     sprint_badge = (
         "<span style='background:linear-gradient(90deg,#9b30ff,#6600cc);"
-        "color:#fff;font-size:0.5rem;font-weight:800;letter-spacing:0.1em;"
+        "color:#fff;font-size:0.75rem;font-weight:800;letter-spacing:0.1em;"
         "padding:0.15rem 0.45rem;border-radius:5px;margin-left:0.4rem;"
         "vertical-align:middle;text-transform:uppercase'>SPRINT</span>"
         if race["sprint"] else ""
@@ -1109,7 +1123,7 @@ def _render_race_card(col, race, ct_color_map, today):
           <div style='display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem'>
             <div style='display:flex;align-items:center;gap:0.55rem;flex:1;min-width:0'>
               <div style='background:linear-gradient(135deg,#ff1e00,#ff6b00);
-                          color:#fff;font-family:Rajdhani;font-size:0.62rem;
+                          color:#fff;font-family:Outfit;font-size:0.87rem;
                           font-weight:900;padding:0.25rem 0.5rem;
                           border-radius:7px;letter-spacing:0.06em;flex-shrink:0'>
                 R{race["round"]}
@@ -1117,27 +1131,27 @@ def _render_race_card(col, race, ct_color_map, today):
               {flag_e}
               <div style='min-width:0'>
                 <div style='font-weight:700;color:{"#888" if is_past else "#fff"};
-                             font-size:0.9rem;white-space:nowrap;
+                             font-size:1.05rem;white-space:nowrap;
                              overflow:hidden;text-overflow:ellipsis'>
                   {race["name"]}{sprint_badge}
                 </div>
-                <div style='font-size:0.68rem;color:#444;margin-top:2px'>
+                <div style='font-size:0.88rem;color:#444;margin-top:2px'>
                   {race["circuit"]}
                 </div>
               </div>
             </div>
             <div style='text-align:right;flex-shrink:0'>
-              <div style='font-size:0.75rem;color:{"#555" if is_past else "#bbb"};font-weight:500'>
+              <div style='font-size:0.95rem;color:{"#555" if is_past else "#bbb"};font-weight:500'>
                 {date_str}
               </div>
-              <div style='display:inline-block;font-size:0.56rem;font-weight:700;
+              <div style='display:inline-block;font-size:0.81rem;font-weight:700;
                           text-transform:uppercase;letter-spacing:0.08em;
                           padding:0.12rem 0.45rem;border-radius:999px;
                           border:1px solid {ct_color};color:{ct_color};
                           margin-top:0.3rem;opacity:{"0.5" if is_past else "1"}'>
                 {ct_label}
               </div>
-              {'<div style="font-size:0.6rem;color:#00ff88;font-weight:700;margin-top:0.2rem">✓ COMPLETED</div>' if is_past else ('<div style="font-size:0.6rem;color:#ff1e00;font-weight:700;margin-top:0.2rem;animation:pulse 1.5s infinite">◉ NEXT RACE</div>' if is_next else "")}
+              {'<div style="font-size:0.85rem;color:#00ff88;font-weight:700;margin-top:0.2rem">✓ COMPLETED</div>' if is_past else ('<div style="font-size:0.85rem;color:#ff1e00;font-weight:700;margin-top:0.2rem;animation:pulse 1.5s infinite">◉ NEXT RACE</div>' if is_next else "")}
             </div>
           </div>
 
@@ -1159,8 +1173,8 @@ def _render_race_card(col, race, ct_color_map, today):
                     unsafe_allow_html=True,
                 )
                 st.markdown(
-                    f"<div style='text-align:center;font-family:Rajdhani;"
-                    f"font-size:0.6rem;color:{ct_color};letter-spacing:0.12em;"
+                    f"<div style='text-align:center;font-family:Outfit;"
+                    f"font-size:0.85rem;color:{ct_color};letter-spacing:0.12em;"
                     f"text-transform:uppercase'>{race['circuit']}</div>",
                     unsafe_allow_html=True,
                 )
@@ -1188,20 +1202,20 @@ def _render_race_card(col, race, ct_color_map, today):
                     </div>
                     <div class='track-stat' style='margin-top:0.5rem'>
                       <div class='track-stat-label'>Lap Record</div>
-                      <div class='track-stat-value' style='color:#ff6b00;font-size:0.78rem'>
+                      <div class='track-stat-value' style='color:#ff6b00;font-size:0.98rem'>
                         {details.get("lap_record","–")}
                       </div>
                     </div>
                     <div class='track-stat' style='margin-top:0.5rem'>
                       <div class='track-stat-label'>Key Corner</div>
-                      <div class='track-stat-value' style='font-size:0.78rem'>
+                      <div class='track-stat-value' style='font-size:0.98rem'>
                         {details.get("key_corner","–")}
                       </div>
                     </div>
                     <div style='margin-top:0.6rem;padding:0.55rem 0.8rem;
                                 background:rgba(255,255,255,0.02);border-radius:8px;
                                 border-left:3px solid {ct_color};
-                                font-size:0.72rem;color:#aaa;line-height:1.55'>
+                                font-size:0.92rem;color:#aaa;line-height:1.55'>
                       {details.get("characteristic","")}
                     </div>""", unsafe_allow_html=True)
 
@@ -1209,7 +1223,7 @@ def _render_race_card(col, race, ct_color_map, today):
             schedule = _SPRINT_WKD if race["sprint"] else _NORMAL_WKD
             st.markdown(
                 f"<div style='margin-top:0.9rem;margin-bottom:0.3rem;"
-                f"font-size:0.62rem;color:#444;text-transform:uppercase;"
+                f"font-size:0.87rem;color:#444;text-transform:uppercase;"
                 f"letter-spacing:0.12em;font-weight:700'>"
                 f"{get_icon('clock',11,'#444',4)} Weekend Schedule</div>",
                 unsafe_allow_html=True
@@ -1219,11 +1233,11 @@ def _render_race_card(col, race, ct_color_map, today):
                 rows_html += (
                     f"<div style='display:flex;align-items:center;gap:0.5rem;"
                     f"padding:0.28rem 0;border-bottom:1px solid rgba(255,255,255,0.04)'>"
-                    f"<span style='font-family:Rajdhani;font-size:0.52rem;font-weight:700;"
+                    f"<span style='font-family:Outfit;font-size:0.77rem;font-weight:700;"
                     f"color:#333;min-width:28px'>{day}</span>"
                     f"<span style='width:3px;height:3px;border-radius:50%;"
                     f"background:{color};flex-shrink:0'></span>"
-                    f"<span style='font-size:0.72rem;color:{color};font-weight:600'>"
+                    f"<span style='font-size:0.92rem;color:{color};font-weight:600'>"
                     f"{session}</span></div>"
                 )
             st.markdown(f"<div style='padding:0 0.2rem'>{rows_html}</div>",
@@ -1233,7 +1247,7 @@ def _render_race_card(col, race, ct_color_map, today):
 # ─── RACE PREDICTOR PAGE ─────────────────────────────────────────────────────
 def show_race_predictor(engine):
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('predictor', 28, '#ff1e00')} RACE PREDICTOR</h1>
+        <h1 style="font-size:1.80rem">{get_icon('predictor', 28, '#ff1e00')} RACE PREDICTOR</h1>
         <p>Select any 2026 Grand Prix &middot; Monte Carlo simulation &middot; Animated podium</p>
     </div>""", unsafe_allow_html=True)
 
@@ -1265,7 +1279,7 @@ def show_race_predictor(engine):
         }.get(race_info["circuit_type"], "#888")
         sprint_badge = "<span class='race-sprint-badge'>SPRINT WEEKEND</span>" if race_info["sprint"] else ""
 
-        st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Rajdhani;font-size:1.4rem;font-weight:900;color:#fff'>{selected_race_name}</div><div style='color:#888;font-size:0.9rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>{sprint_badge}</div></div>""", unsafe_allow_html=True)
+        st.markdown(f"""<div style='background:linear-gradient(135deg,#0d0d1a,#15152a);border:1px solid #ffffff18;border-radius:20px;padding:1.5rem 2rem;margin-bottom:2rem;display:flex;gap:1.5rem;align-items:center'><div style='flex:1'><div style='font-family:Outfit;font-size:1.40rem;font-weight:900;color:#fff'>{selected_race_name}</div><div style='color:#888;font-size:1.05rem'>{race_info["circuit"]} &middot; {country_name} &middot; <span style='color:{ct_color}'>{race_info["circuit_type"].replace("_"," ").title()}</span></div>{sprint_badge}</div></div>""", unsafe_allow_html=True)
 
         # Podium ceremony
         top3 = mc_df.head(3)
@@ -1281,7 +1295,7 @@ def show_race_predictor(engine):
             tc = d["team_color"]
             big = idx == 0
             icon_color = "#FFD700" if idx == 0 else ("#C0C0C0" if idx == 1 else "#CD7F32")
-            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Rajdhani;font-size:0.7rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.8rem;" if big else "font-size:1.4rem;"}'>{d["driver_code"]}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{d["driver_name"]}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.65rem;font-weight:700'>{d["team"]}</div><p style='margin-top:0.8rem;font-size:{"1.1rem" if big else "0.9rem"}'>Win <b>{d["win_prob"]:.1%}</b></p></div>""", unsafe_allow_html=True)
+            col.markdown(f"""<div class='{medal_cls}'><div style='margin-bottom:0.5rem'>{get_icon('trophy', 32 if big else 24, icon_color)}</div><div style='font-family:Outfit;font-size:0.90rem;font-weight:700;color:{icon_color};margin-bottom:0.4rem'>{medal_label}</div><h2 style='{"font-size:1.80rem;" if big else "font-size:1.40rem;"}'>{d["driver_code"]}</h2><p style='font-size:{"0.95rem" if big else "0.8rem"};{"font-weight:600;" if big else ""}'>{d["driver_name"]}</p><div style='display:inline-block;background:{tc};color:#fff;padding:0.1rem 0.5rem;border-radius:6px;font-size:0.85rem;font-weight:700'>{d["team"]}</div><p style='margin-top:0.8rem;font-size:{"1.1rem" if big else "0.9rem"}'>Win <b>{d["win_prob"]:.1%}</b></p></div>""", unsafe_allow_html=True)
 
         # Win probability chart
         st.markdown("<div class='section-header'>WIN PROBABILITY</div>", unsafe_allow_html=True)
@@ -1422,7 +1436,7 @@ def show_race_predictor(engine):
                         line=dict(color=tc, width=4)
                     ))
                 fig4.update_layout(
-                    title=dict(text="3D Race Trajectory (Top 10)", font=dict(family="Rajdhani", size=18, color="#fff")),
+                    title=dict(text="3D Race Trajectory (Top 10)", font=dict(family="Outfit", size=18, color="#fff")),
                     scene=dict(
                         xaxis=dict(title="Lap", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
                         yaxis=dict(title="Driver", backgroundcolor="rgba(0,0,0,0)", gridcolor="#333"),
@@ -1477,7 +1491,7 @@ def show_race_predictor(engine):
                                 overlap = len(top5_actual & top5_pred_set)
                                 accuracy_color = "#00ff88" if mae < 3 else "#ff6b00"
                                 accuracy_msg = "Excellent prediction accuracy." if mae < 3 else ("Moderate deviation -- model calibrating." if mae < 5 else "Significant delta -- unexpected race events.")
-                                st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Rajdhani;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:1rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:2rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.65rem;color:#666;text-transform:uppercase'>Mean Abs Error</div></div><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Rajdhani;font-size:2rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.65rem;color:#666;text-transform:uppercase'>Top-5 Overlap</div></div></div><div style='margin-top:1rem;font-size:0.75rem;color:#888;line-height:1.6'>{accuracy_msg}</div></div>""", unsafe_allow_html=True)
+                                st.markdown(f"""<div style='background:rgba(18,18,30,0.9);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:1.5rem'><div style='font-family:Outfit;font-size:1.10rem;font-weight:700;color:#fff;margin-bottom:1rem'>Prediction Accuracy</div><div style='display:flex;gap:1rem;flex-wrap:wrap'><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Outfit;font-size:2rem;font-weight:700;color:{accuracy_color}'>{mae:.1f}</div><div style='font-size:0.85rem;color:#666;text-transform:uppercase'>Mean Abs Error</div></div><div style='flex:1;text-align:center;padding:0.8rem;background:rgba(255,255,255,0.03);border-radius:10px'><div style='font-family:Outfit;font-size:2rem;font-weight:700;color:#27F4D2'>{overlap}/5</div><div style='font-size:0.85rem;color:#666;text-transform:uppercase'>Top-5 Overlap</div></div></div><div style='margin-top:1rem;font-size:0.95rem;color:#888;line-height:1.6'>{accuracy_msg}</div></div>""", unsafe_allow_html=True)
 
                         # Scatter plot: predicted vs actual
                         valid2 = comp_df[comp_df["Predicted Pos"] != "N/A"].copy()
@@ -1517,7 +1531,7 @@ def show_race_predictor(engine):
 # ─── SEASON SIMULATOR PAGE ────────────────────────────────────────────────────
 def show_season_simulator(engine):
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('trophy', 32, '#ff1e00')} SEASON SIMULATOR</h1>
+        <h1 style="font-size:1.80rem">{get_icon('trophy', 32, '#ff1e00')} SEASON SIMULATOR</h1>
         <p>Full 2026 championship forecast across all 24 rounds</p>
     </div>""", unsafe_allow_html=True)
 
@@ -1539,12 +1553,12 @@ def show_season_simulator(engine):
             col.markdown(f"""
             <div class='driver-card' style='border-top:4px solid {tc};text-align:center'>
                 <div style='margin-bottom:0.5rem'>{get_icon('trophy', 24, tc)}</div>
-                <div style='font-family:Rajdhani;font-weight:900;color:{tc};font-size:1rem'>{row["driver_code"]}</div>
-                <div style='font-size:0.75rem;color:#888'>{row["driver_name"]}</div>
-                <div style='font-family:Rajdhani;font-size:1.8rem;color:#fff;font-weight:900;margin-top:0.4rem'>
-                    {int(row["points"])} <span style='font-size:0.6rem;color:#555'>PTS</span>
+                <div style='font-family:Outfit;font-weight:900;color:{tc};font-size:1rem'>{row["driver_code"]}</div>
+                <div style='font-size:0.95rem;color:#888'>{row["driver_name"]}</div>
+                <div style='font-family:Outfit;font-size:1.80rem;color:#fff;font-weight:900;margin-top:0.4rem'>
+                    {int(row["points"])} <span style='font-size:0.85rem;color:#555'>PTS</span>
                 </div>
-                <div style='font-size:0.75rem;color:#666;margin-top:0.2rem'>{int(row["wins"])} WINS</div>
+                <div style='font-size:0.95rem;color:#666;margin-top:0.2rem'>{int(row["wins"])} WINS</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1602,7 +1616,7 @@ def show_season_simulator(engine):
 # ─── DRIVER PROFILES PAGE ─────────────────────────────────────────────────────
 def show_driver_profiles():
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('user', 28, '#ff1e00')} DRIVER PROFILES</h1>
+        <h1 style="font-size:1.80rem">{get_icon('user', 28, '#ff1e00')} DRIVER PROFILES</h1>
         <p>All 22 drivers &middot; Performance ratings &middot; Team details</p>
     </div>""", unsafe_allow_html=True)
 
@@ -1625,7 +1639,7 @@ def show_driver_profiles():
         c1, c2 = st.columns(2)
         for col, driver in zip([c1, c2], rows[i:i + 2]):
             tc = TEAM_COLORS.get(driver["team"], "#888")
-            rookie_label = (" <span style='background:#ff6b00;color:#fff;font-size:0.58rem;"
+            rookie_label = (" <span style='background:#ff6b00;color:#fff;font-size:0.83rem;"
                             "padding:0.1rem 0.3rem;border-radius:3px;font-weight:700'>ROOKIE</span>"
                             if driver["rookie"] else "")
             skill_keys = [
@@ -1634,7 +1648,7 @@ def show_driver_profiles():
             ]
             bars_html = "".join([
                 f"<div style='margin:0.2rem 0'>"
-                f"<div style='display:flex;justify-content:space-between;font-size:0.7rem;color:#aaa;margin-bottom:2px'>"
+                f"<div style='display:flex;justify-content:space-between;font-size:0.90rem;color:#aaa;margin-bottom:2px'>"
                 f"<span>{label}</span><span>{driver.get(key, 7):.1f}</span></div>"
                 f"<div class='prob-bar-bg' style='height:4px;background:rgba(255,255,255,0.05)'><div class='prob-bar-fill' style='height:4px;width:{driver.get(key, 7) / 10 * 100}%;background:{tc}'></div></div>"
                 f"</div>"
@@ -1648,16 +1662,16 @@ def show_driver_profiles():
                     <div style='display:flex;gap:0.8rem;align-items:center;flex:1'>
                         <img src='{headshot_url}' style='width:64px;height:64px;object-fit:cover;border-radius:50%;background:rgba(255,255,255,0.05);border:2px solid {tc}'>
                         <div>
-                            <div style='font-size:1.4rem;font-weight:900;color:{tc};font-family:Rajdhani'>
+                            <div style='font-size:1.40rem;font-weight:900;color:{tc};font-family:Outfit'>
                                 {driver["code"]}{rookie_label}</div>
-                            <div style='font-size:0.88rem;color:#ccc;font-weight:600'>{driver["name"]}</div>
-                            <div style='font-size:0.7rem;color:#555;text-transform:uppercase;letter-spacing:0.05em'>
+                            <div style='font-size:1.03rem;color:#ccc;font-weight:600'>{driver["name"]}</div>
+                            <div style='font-size:0.90rem;color:#555;text-transform:uppercase;letter-spacing:0.05em'>
                                 {driver["team"]} &middot; {driver["nationality"]}</div>
                         </div>
                     </div>
                     <div style='text-align:right'>
-                        <div style='font-family:Rajdhani;font-size:1.8rem;font-weight:900;color:#ff1e00'>{driver["overall"]:.1f}</div>
-                        <div style='font-size:0.6rem;color:#555;text-transform:uppercase'>Rating</div>
+                        <div style='font-family:Outfit;font-size:1.80rem;font-weight:900;color:#ff1e00'>{driver["overall"]:.1f}</div>
+                        <div style='font-size:0.85rem;color:#555;text-transform:uppercase'>Rating</div>
                     </div>
                 </div>
                 <div style='margin-top:1rem'>{bars_html}</div>
@@ -1694,7 +1708,7 @@ def show_driver_profiles():
 # ─── ANALYTICS PAGE ───────────────────────────────────────────────────────────
 def show_analytics():
     st.markdown(f"""<div class="f1-hero" style="padding:1.5rem 2rem">
-        <h1 style="font-size:1.8rem">{get_icon('analytics', 32, '#ff1e00')} ANALYTICS</h1>
+        <h1 style="font-size:1.80rem">{get_icon('analytics', 32, '#ff1e00')} ANALYTICS</h1>
         <p>Team power rankings &middot; 2026 regulation impact &middot; Circuit intelligence</p>
     </div>""", unsafe_allow_html=True)
 
@@ -1776,7 +1790,7 @@ def show_analytics():
             for rcol, (title, desc) in zip([rc1, rc2], regs_detail[i:i + 2]):
                 rcol.markdown(
                     f"<div class='reg-card' style='text-align:left'><h4>{title}</h4>"
-                    f"<p style='margin-top:0.5rem;font-size:0.82rem'>{desc}</p></div>",
+                    f"<p style='margin-top:0.5rem;font-size:1.02rem'>{desc}</p></div>",
                     unsafe_allow_html=True,
                 )
 
@@ -1793,7 +1807,7 @@ def show_analytics():
             fig5 = px.pie(ct_counts, names="Type", values="Count",
                           color="Type", color_discrete_map=ct_colors_map, hole=0.45)
             dark_layout(fig5, "Calendar by Circuit Type", 340)
-            fig5.update_traces(textinfo="label+percent", textfont=dict(family="Space Grotesk"))
+            fig5.update_traces(textinfo="label+percent", textfont=dict(family="Inter"))
             st.plotly_chart(fig5, use_container_width=True)
 
         with cia2:
